@@ -1,0 +1,41 @@
+-- drop table skyline_initial_queue
+
+-- This queue table is going to be owned by Nucleus and is part of core DB unlike the result tables which are owned by datascope
+
+create table skyline_initial_queue (
+    id bigserial NOT NULL,
+    user_id uuid NOT NULL,
+    course_id uuid NOT NULL,
+    class_id uuid,
+    status int NOT NULL DEFAULT 0 CHECK (status::int = ANY (ARRAY[0::int, 1::int, 2::int])),
+    category int NOT NULL DEFAULT 0 CHECK(category::int = ANY(ARRAY[0::int, 1::int])),
+    payload text,
+    created_at timestamp without time zone DEFAULT timezone('UTC'::text, now()) NOT NULL,
+    updated_at timestamp without time zone DEFAULT timezone('UTC'::text, now()) NOT NULL,
+    CONSTRAINT siq_pkey PRIMARY KEY (id),
+    CONSTRAINT  siq_cat_pay_chk CHECK ((category = 0 AND payload is NOT NULL) OR (category = 1 AND payload is NULL))
+);
+
+ALTER TABLE skyline_initial_queue OWNER TO nucleus;
+
+CREATE UNIQUE INDEX siq_ucc_unq_idx
+    ON skyline_initial_queue (user_id, course_id, class_id)
+    where class_id is not null;
+
+CREATE UNIQUE INDEX siq_ucc_null_unq_idx
+    ON skyline_initial_queue (user_id, course_id)
+    where class_id is null;
+
+COMMENT on TABLE skyline_initial_queue IS 'Persistent queue for initial baseline tasks';
+COMMENT on COLUMN skyline_initial_queue.status IS '0 means queued, 1 means dispatched for processing, 2 means in process';
+COMMENT on COLUMN skyline_initial_queue.category IS '0 diagnostic, 1 offline';
+COMMENT on COLUMN skyline_initial_queue.payload IS 'JSON payload as received from log writer for diagnostic assessment';
+
+-- Alter on class_member table
+
+alter table class_member add column diag_asmt_assigned uuid;
+alter table class_member add column diag_asmt_state int;
+alter table class_member add column initial_lp_done boolean;
+
+COMMENT on COLUMN class_member.diag_asmt_state IS 'NULL means not initialized, 0 means not needed, 1 means suggested, 2 means done, 3 means not available';
+ALTER TABLE class_member ADD CONSTRAINT cm_das_chk CHECK (diag_asmt_state = 0 OR diag_asmt_state = 1 OR diag_asmt_state = 2 OR diag_asmt_state = 3);
