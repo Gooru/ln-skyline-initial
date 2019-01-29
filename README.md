@@ -35,15 +35,60 @@ To run the binary which would be fat jar from the project base directory:
   - Show directions
   - Wait for ILP
   
+##### API signature
+POST /api/skyline-initial/v1/state
+
+**Payload**
+```{"classId": "class-uuid"}```
+
+Needs session token for student to figure out student id. Error in case of where user 
+is not active member specified class.
+
+**Response**
+```
+{
+  "destination": "diagnostic-play",
+  "context": {
+    "diagnosticId": "UUID for diag asmt"
+  }
+}
+```
+
+Valid values for destination are:
+- course-map
+- diagnostic-play
+- show-directions
+- ilp-in-progress
+- class-setup-incomplete
+
+The context object will be null in cases other then diagnostic-play.
+
+
+  
 #### Offline class ILP API
 - This API should be called in context of teacher only and for offline classes only
 - This API will take input as list of class members
-- Do valdiations
+- Do validations
   - The class should be valid and it should be offline
   - Each class members should have their origin set and they should be active
 - If validation fails, no processing happens and 400 status is sent back to caller 
 - If validation is successful, then requests are queued and status 200 is sent back
 
+##### API signature
+POST /api/skyline-initial/v1/calculate
+
+**Payload**
+```
+{
+  "classId": "class-uuid",
+  "users": ["user1-uuid", "user2-uuid"]
+}
+```
+
+**Response**
+
+- HTTP Status : 200
+- Payload: Empty 
 
 ### Design
 
@@ -90,6 +135,7 @@ To run the binary which would be fat jar from the project base directory:
                 - else
                     - update state to diag-not-available
                     - update flag of ILP done to true
+                    - Show directions. Done
             - Else
                 - update state to diag-not-needed
                 - Show directions. Done
@@ -165,3 +211,5 @@ course, any time teacher changes student settings, then:
 - LogWriter post processor modifications
   - To remove processing of LPCS
   - Make it queue the request along with payload in queue table
+
+
