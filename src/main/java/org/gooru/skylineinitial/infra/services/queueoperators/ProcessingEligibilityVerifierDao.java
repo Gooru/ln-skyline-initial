@@ -21,6 +21,6 @@ interface ProcessingEligibilityVerifierDao {
           + "course_id = :courseId::text  and class_id = :classId::text)")
   boolean profileBaselineDoneForUserInClass(@BindBean SkylineInitialQueueModel model);
 
-  @SqlQuery("select exists (select 1 from profile_baseline_queue where id = :id and status = 1)")
+  @SqlQuery("select exists (select 1 from skyline_initial_queue where id = :id and status = 1)")
   boolean isQueuedRecordStillDispatched(@Bind("id") Long id);
 }
