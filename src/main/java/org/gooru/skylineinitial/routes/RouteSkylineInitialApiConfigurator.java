@@ -36,24 +36,19 @@ public class RouteSkylineInitialApiConfigurator implements RouteConfigurator {
   }
 
   private void fetchState(RoutingContext routingContext) {
-    // TODO : Provide implementation
     DeliveryOptions options = DeliveryOptionsBuilder
         .buildWithoutApiVersion(routingContext, mbusTimeout, Message.MSG_OP_SKYLINE_INITIAL_STATE);
-    eb.send(Constants.EventBus.MBEP_API_DISPATCHER,
+    eb.<JsonObject>send(Constants.EventBus.MBEP_API_DISPATCHER,
         RouteRequestUtility.getBodyForMessage(routingContext),
-        options);
-    RouteResponseUtility
-        .responseHandlerStatusOnlyNoBodyOrHeaders(routingContext, HttpConstants.HttpStatus.SUCCESS);
+        options, reply -> RouteResponseUtility.responseHandler(routingContext, reply, LOGGER));
   }
 
   private void doSkylineInitialForOfflineClass(RoutingContext routingContext) {
     DeliveryOptions options = DeliveryOptionsBuilder
         .buildWithoutApiVersion(routingContext, mbusTimeout,
             Message.MSG_OP_SKYLINE_INITIAL_OFFLINE_CLASS_CALCULATE);
-    eb.send(Constants.EventBus.MBEP_API_DISPATCHER,
+    eb.<JsonObject>send(Constants.EventBus.MBEP_API_DISPATCHER,
         RouteRequestUtility.getBodyForMessage(routingContext),
-        options);
-    RouteResponseUtility
-        .responseHandlerStatusOnlyNoBodyOrHeaders(routingContext, HttpConstants.HttpStatus.SUCCESS);
+        options, reply -> RouteResponseUtility.responseHandler(routingContext, reply, LOGGER));
   }
 }

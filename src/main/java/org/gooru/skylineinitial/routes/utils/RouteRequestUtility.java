@@ -41,6 +41,12 @@ public final class RouteRequestUtility {
       httpBody = new JsonObject();
     }
     result.put(Constants.Message.MSG_HTTP_BODY, httpBody);
+    result.put(Constants.Message.MSG_KEY_SESSION,
+        (JsonObject) routingContext.get(Constants.Message.MSG_KEY_SESSION));
+    result.put(Constants.Message.MSG_USER_ID,
+        (String) routingContext.get(Constants.Message.MSG_USER_ID));
+    result.put(Constants.Message.MSG_SESSION_TOKEN,
+        (String) routingContext.get(Constants.Message.MSG_SESSION_TOKEN));
     return result;
   }
 

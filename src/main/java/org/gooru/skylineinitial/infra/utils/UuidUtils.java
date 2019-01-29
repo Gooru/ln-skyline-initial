@@ -33,6 +33,18 @@ public final class UuidUtils {
     return uuid.toString();
   }
 
+  public static boolean validateUuid(String uuidString) {
+    if (uuidString == null) {
+      return false;
+    }
+    try {
+      UUID.fromString(uuidString);
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
   public static List<UUID> convertToUUIDList(JsonArray array) {
     if (array == null || array.isEmpty()) {
       return Collections.emptyList();
