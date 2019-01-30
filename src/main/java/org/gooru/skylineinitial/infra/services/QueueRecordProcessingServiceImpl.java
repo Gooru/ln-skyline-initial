@@ -60,7 +60,8 @@ class QueueRecordProcessingServiceImpl implements QueueRecordProcessingService {
       dequeueRecord();
       return;
     }
-    processRecord();
+    // TODO: Implement this
+    // processRecord();
   }
 
   private void dequeueRecord() {

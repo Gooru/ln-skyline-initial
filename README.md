@@ -71,6 +71,7 @@ The context object will be null in cases other then diagnostic-play.
 - Do validations
   - The class should be valid and it should be offline
   - Each class members should have their origin set and they should be active
+  - A premium course should be associated with class 
 - If validation fails, no processing happens and 400 status is sent back to caller 
 - If validation is successful, then requests are queued and status 200 is sent back
 
