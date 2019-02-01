@@ -103,6 +103,7 @@ POST /api/skyline-initial/v1/calculate
     - suggested
     - done
     - not available
+    - class offline
 - ILP done
 **Class enhancement**
 - setup completed (calculate at run time or store in DB??)
@@ -167,8 +168,6 @@ POST /api/skyline-initial/v1/calculate
 In student context, setup completion is defined by:
 - The class context for specified student should have
   - Destination grade setup
-  - Subject setup
-  - Framework setup
   - Course is assigned to class
 - The student context should have
   - Student origin setup 

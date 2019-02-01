@@ -100,7 +100,7 @@ public class SkylineInitialQueueModel {
     this.payload = payload;
   }
 
-  public DiagnosticAssessmentPlayedCommand payloadAsDiagnosticAssessmentPlayedCommand () {
+  public DiagnosticAssessmentPlayedCommand payloadAsDiagnosticAssessmentPlayedCommand() {
     if (payload != null) {
       return DiagnosticAssessmentPlayedCommand.build(payload);
     }

@@ -46,6 +46,7 @@ class StateApiProcessorCommand {
   }
 
   private static class RequestAttributes {
+
     private static final String CLASS_ID = "classId";
   }
 }

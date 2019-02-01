@@ -6,9 +6,8 @@ import org.gooru.skylineinitial.infra.jdbi.DBICreator;
 import org.skife.jdbi.v2.DBI;
 
 /**
- * Module to queue the request for initial skyline for offline classes which are associated
- * with premium course. The specified validations are not enforced in this module, it is left to
- * caller
+ * Module to queue the request for initial skyline for offline classes which are associated with
+ * premium course. The specified validations are not enforced in this module, it is left to caller
  *
  * @author ashish
  */

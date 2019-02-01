@@ -2,13 +2,10 @@ package org.gooru.skylineinitial.infra.services.queuerequest;
 
 import java.util.List;
 import java.util.UUID;
-import org.gooru.skylineinitial.infra.data.SkylineInitialQueueModel;
 import org.gooru.skylineinitial.infra.jdbi.UUIDMapper;
 import org.skife.jdbi.v2.sqlobject.Bind;
-import org.skife.jdbi.v2.sqlobject.BindBean;
 import org.skife.jdbi.v2.sqlobject.SqlBatch;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
-import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 
 /**

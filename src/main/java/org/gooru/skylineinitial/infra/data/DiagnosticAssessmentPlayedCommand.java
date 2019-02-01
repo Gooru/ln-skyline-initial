@@ -10,6 +10,7 @@ import java.util.UUID;
 
 /**
  * Encapsulates the payload that will be received from LogWriter
+ *
  * @author ashish.
  */
 

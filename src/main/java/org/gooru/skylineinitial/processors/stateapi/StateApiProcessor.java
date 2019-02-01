@@ -43,7 +43,7 @@ public class StateApiProcessor implements AsyncMessageProcessor {
         this.eventBusMessage = EventBusMessage.eventBusMessageBuilder(message);
         StateApiProcessorCommand command = StateApiProcessorCommand
             .builder(eventBusMessage);
-        JsonObject result = stateApiProcessorService.calculateAndFetchState(command);
+        StateApiResponse result = stateApiProcessorService.calculateAndFetchState(command);
         future.complete(createResponse(result));
       } catch (Throwable throwable) {
         LOGGER.warn("Encountered exception", throwable);
@@ -59,8 +59,8 @@ public class StateApiProcessor implements AsyncMessageProcessor {
     return result;
   }
 
-  private MessageResponse createResponse(JsonObject result) {
-    return MessageResponseFactory.createOkayResponse(result);
+  private MessageResponse createResponse(StateApiResponse result) {
+    return MessageResponseFactory.createOkayResponse(result.asJson());
   }
 
 

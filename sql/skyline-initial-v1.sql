@@ -37,5 +37,5 @@ alter table class_member add column diag_asmt_assigned uuid;
 alter table class_member add column diag_asmt_state int;
 alter table class_member add column initial_lp_done boolean;
 
-COMMENT on COLUMN class_member.diag_asmt_state IS 'NULL means not initialized, 0 means not needed, 1 means suggested, 2 means done, 3 means not available';
-ALTER TABLE class_member ADD CONSTRAINT cm_das_chk CHECK (diag_asmt_state = 0 OR diag_asmt_state = 1 OR diag_asmt_state = 2 OR diag_asmt_state = 3);
+COMMENT on COLUMN class_member.diag_asmt_state IS '0 means not initialized, 1 means not needed, 2 means suggested, 3 means done, 4 means not available, 5 means class is offline';
+ALTER TABLE class_member ADD CONSTRAINT cm_das_chk CHECK (diag_asmt_state = 0 OR diag_asmt_state = 1 OR diag_asmt_state = 2 OR diag_asmt_state = 3 OR diag_asmt_state = 4 OR diag_asmt_state = 5);

@@ -9,7 +9,6 @@ import io.vertx.ext.web.RoutingContext;
 import org.gooru.skylineinitial.infra.constants.Constants;
 import org.gooru.skylineinitial.infra.constants.Constants.Message;
 import org.gooru.skylineinitial.infra.constants.Constants.Route;
-import org.gooru.skylineinitial.infra.constants.HttpConstants;
 import org.gooru.skylineinitial.routes.utils.DeliveryOptionsBuilder;
 import org.gooru.skylineinitial.routes.utils.RouteRequestUtility;
 import org.gooru.skylineinitial.routes.utils.RouteResponseUtility;
