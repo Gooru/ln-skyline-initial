@@ -16,6 +16,6 @@ public final class LearnerProfileSourceGenerator {
   }
 
   public static String generateProfileSource(UUID assessmentId) {
-    return DIAGNOSTIC + ":" + Objects.toString(assessmentId);
+    return DIAGNOSTIC + ":" + assessmentId;
   }
 }

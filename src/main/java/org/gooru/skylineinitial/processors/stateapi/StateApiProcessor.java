@@ -25,7 +25,7 @@ public class StateApiProcessor implements AsyncMessageProcessor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(StateApiProcessor.class);
   private EventBusMessage eventBusMessage;
-  private StateApiProcessorService stateApiProcessorService = new StateApiProcessorService(
+  private final StateApiProcessorService stateApiProcessorService = new StateApiProcessorService(
       DBICreator.getDbiForDefaultDS(), DBICreator.getDbiForDsdbDS()
   );
 

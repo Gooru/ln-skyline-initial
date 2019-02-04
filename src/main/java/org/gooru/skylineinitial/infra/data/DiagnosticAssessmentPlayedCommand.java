@@ -68,7 +68,7 @@ class DiagnosticAssessmentPlayedCommand {
     String value = payload.getString(key);
     if (!nullable && value == null) {
       throw new IllegalArgumentException(
-          key + " is non nullable, found null in request: " + Objects.toString(payload));
+          key + " is non nullable, found null in request: " + payload);
     } else if (value == null) {
       return null;
     } else {
