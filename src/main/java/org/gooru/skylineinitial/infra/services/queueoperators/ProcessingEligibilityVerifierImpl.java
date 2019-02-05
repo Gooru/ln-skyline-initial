@@ -13,16 +13,13 @@ class ProcessingEligibilityVerifierImpl implements
     ProcessingEligibilityVerifier {
 
   private final DBI dbi4core;
-  private final DBI dbi4ds;
   private static final Logger LOGGER = LoggerFactory
       .getLogger(ProcessingEligibilityVerifierImpl.class);
   private SkylineInitialQueueModel model;
   private ProcessingEligibilityVerifierDao dao4core;
-  private ProcessingEligibilityVerifierDao dao4ds;
 
-  ProcessingEligibilityVerifierImpl(DBI dbi4core, DBI dbi4ds) {
+  ProcessingEligibilityVerifierImpl(DBI dbi4core) {
     this.dbi4core = dbi4core;
-    this.dbi4ds = dbi4ds;
   }
 
   @Override
@@ -32,8 +29,8 @@ class ProcessingEligibilityVerifierImpl implements
       LOGGER.debug("Record is not found to be in dispatched state, may be processed already.");
       return false;
     }
-    if (wasBaselineAlreadyDone()) {
-      LOGGER.debug("Profile baseline was already done");
+    if (wasILPAlreadyDone()) {
+      LOGGER.debug("ILP was already done");
       return false;
     }
 
@@ -41,11 +38,8 @@ class ProcessingEligibilityVerifierImpl implements
   }
 
 
-  private boolean wasBaselineAlreadyDone() {
-    if (model.getClassId() == null) {
-      return fetchDsDao().profileBaselineDoneForUserInIL(model);
-    }
-    return fetchDsDao().profileBaselineDoneForUserInClass(model);
+  private boolean wasILPAlreadyDone() {
+    return fetchCoreDao().ilpAlreadyDoneForUser(model);
   }
 
   private boolean recordIsStillInDispatchedState() {
@@ -57,13 +51,6 @@ class ProcessingEligibilityVerifierImpl implements
       dao4core = dbi4core.onDemand(ProcessingEligibilityVerifierDao.class);
     }
     return dao4core;
-  }
-
-  private ProcessingEligibilityVerifierDao fetchDsDao() {
-    if (dao4ds == null) {
-      dao4ds = dbi4ds.onDemand(ProcessingEligibilityVerifierDao.class);
-    }
-    return dao4ds;
   }
 
 }

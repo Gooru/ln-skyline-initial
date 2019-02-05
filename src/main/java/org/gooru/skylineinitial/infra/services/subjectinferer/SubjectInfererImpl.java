@@ -30,6 +30,11 @@ class SubjectInfererImpl implements SubjectInferer {
     return null;
   }
 
+  @Override
+  public String inferSubjectForClass(UUID classId) {
+    return getSubjectInfererDao().fetchSubjectForClass(classId);
+  }
+
   private boolean isFrameworkCode(String subjectCode) {
     long countDots = subjectCode.chars().filter(ch -> ch == '.').count();
     return countDots > 1;

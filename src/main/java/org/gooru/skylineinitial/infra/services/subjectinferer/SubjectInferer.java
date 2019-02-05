@@ -11,6 +11,8 @@ public interface SubjectInferer {
 
   String inferSubjectForCourse(UUID courseId);
 
+  String inferSubjectForClass(UUID classId);
+
   static SubjectInferer build() {
     return new SubjectInfererImpl(DBICreator.getDbiForDefaultDS());
   }

@@ -12,14 +12,9 @@ import org.skife.jdbi.v2.sqlobject.SqlQuery;
 interface ProcessingEligibilityVerifierDao {
 
   @SqlQuery(
-      "select exists (select 1 from learner_profile_baselined where user_id = :userId::text and "
-          + " course_id = :courseId::text  and class_id is null)")
-  boolean profileBaselineDoneForUserInIL(@BindBean SkylineInitialQueueModel model);
-
-  @SqlQuery(
-      "select exists (select 1 from learner_profile_baselined where user_id = :userId::text and "
-          + "course_id = :courseId::text  and class_id = :classId::text)")
-  boolean profileBaselineDoneForUserInClass(@BindBean SkylineInitialQueueModel model);
+      "select exists (select 1 from class_member where user_id = :userId and "
+          + " class_id = :classId and initial_lp_done = true)")
+  boolean ilpAlreadyDoneForUser(@BindBean SkylineInitialQueueModel model);
 
   @SqlQuery("select exists (select 1 from skyline_initial_queue where id = :id and status = 1)")
   boolean isQueuedRecordStillDispatched(@Bind("id") Long id);

@@ -2,40 +2,44 @@ package org.gooru.skylineinitial.infra.services;
 
 import org.gooru.skylineinitial.infra.data.ProcessingContext;
 import org.gooru.skylineinitial.infra.data.SkylineInitialQueueModel;
-import org.gooru.skylineinitial.infra.services.algebra.competency.CompetencyLine;
-import org.gooru.skylineinitial.infra.services.baselinedonehandler.BaselineDoneInformer;
-import org.gooru.skylineinitial.infra.services.classsetting.ClassGradeLowBoundFinder;
-import org.gooru.skylineinitial.infra.services.learnerprofile.LearnerProfileProvider;
+import org.gooru.skylineinitial.infra.services.baselinedonehandler.ILPDoneInformer;
 import org.gooru.skylineinitial.infra.services.queueoperators.ProcessingEligibilityVerifier;
 import org.gooru.skylineinitial.infra.services.queueoperators.RequestDequeuer;
+import org.gooru.skylineinitial.infra.services.settings.SettingsModel;
 import org.gooru.skylineinitial.infra.services.subjectinferer.SubjectInferer;
 import org.gooru.skylineinitial.infra.services.validators.ContextValidator;
 import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// @formatter:off
 /**
- * Here is the algorithmic logic:
- * <li> Verify it baseline is not already done or is picked up by some other thread. If any of
- * these two cases, no action needed
- * <li> Validate the class/user/course combination for not being not deleted. If it is, no action
- * needed
- * <li> If class context is present, fetch the low grade line. Note that it could be null as well.
- * In IL case it will be null (or empty)
- * <li> Fetch the subject bucket associated with the course. If subject bucket is not present, no
- * action needed further
- * <li> Fetch the current learner profile for specified subject as LP line
- * <li> Now that there is LP line and low grade line, do a UNION to get the better of these two
- * <li> Persist the resultant line as LP baseline. Note that there is need to persist both the
- * master and details record
- * <li> Fetch the read API kind of response, with join of domain/competency/baseline path. Note
- * that this contains domain's name as well as sequence
- * <li> Create a JSON from resultant response
- * <li> Persist the specified JSON as cached value
- * <li> Send out a message for post processing
+ *
+ * - Start
+ * - Before the processing is actually started, the flag in class member table for diag-done is set
+ * - The processing is done and ILP is updated, using ILP update flow as outlined below
+ *   - Read the queue record
+ *   - parse the payload and map it to relevant command
+ *   - if class is NOT offline and premium, and diagnostic is played
+ *     - based on the command define on competency to be updated
+ *     - Find out relevant competency in each domain
+ *       - Arrange competency covered by diagnostic in each domain ordered by sequence id
+ *       - Find maximum competency order for which all competency below are completed
+ *       - Choose it as destination competency
+ *     - In LPCS, find if user has any competency in that domain already mastered or completed
+ *     - Take better of user's LPCS evidenced competency and relevant competency from diagnostic
+ *     - Update LPCS (and other table)
+ *   - else if class is offline and premium
+ *     - Read student origin, average value
+ *     - populate it as ILP using better algo with existing LP
+ *   - dequeue record
+ * - The class member table is updated with flag for ILP generation completed
+ *
+ * - End
  *
  * @author ashish.
  */
+// @formatter:on
 
 class QueueRecordProcessingServiceImpl implements QueueRecordProcessingService {
 
@@ -54,14 +58,13 @@ class QueueRecordProcessingServiceImpl implements QueueRecordProcessingService {
   @Override
   public void processQueueRecord(SkylineInitialQueueModel model) {
     this.model = model;
-    if (!ProcessingEligibilityVerifier.build(dbi4core, dbi4ds)
+    if (!ProcessingEligibilityVerifier.build(dbi4core)
         .isEligibleForProcessing(model)) {
       LOGGER.debug("Record is not found to be in dispatched state, may be processed already.");
       dequeueRecord();
       return;
     }
-    // TODO: Implement this
-    // processRecord();
+    processRecord();
   }
 
   private void dequeueRecord() {
@@ -74,20 +77,8 @@ class QueueRecordProcessingServiceImpl implements QueueRecordProcessingService {
     context = ProcessingContext.buildFromQueueModel(model);
 
     try {
-      validate();
-      initializeSubject();
-      // TODO: Implement this
-
-      // fetch low grade
-      CompetencyLine lowGradeLine = ClassGradeLowBoundFinder.build(dbi4core, dbi4ds)
-          .findLowGradeForClassMember(context);
-      // fetch learner profile
-      CompetencyLine learnerProfileLine = LearnerProfileProvider.build(dbi4core, dbi4ds)
-          .findLearnerProfileForUser(context);
-      // merge these two lines
-      CompetencyLine resultLine = learnerProfileLine.merge(lowGradeLine, true);
-
-      // do whatever post processing needed
+      preprocess();
+      process();
       doPostProcessing();
     } catch (Throwable e) {
       LOGGER.warn("Not able to do initial skyline for model: '{}'. Will dequeue record.",
@@ -99,17 +90,35 @@ class QueueRecordProcessingServiceImpl implements QueueRecordProcessingService {
     }
   }
 
-  private void doPostProcessing() {
+  private void process() {
     // TODO: Implement this
-    BaselineDoneInformer.build(dbi4core).inform(context);
+  }
+
+  private void preprocess() {
+    validate();
+    initialize();
+  }
+
+  private void doPostProcessing() {
+    ILPDoneInformer.build(dbi4core).inform(context);
   }
 
   private void validate() {
     ContextValidator.build(dbi4core, dbi4ds).validate(context);
   }
 
+  private void initialize() {
+    initializeSubject();
+    initializeSettingsModel();
+  }
+
+  private void initializeSettingsModel() {
+    SettingsModel model = SettingsModel.build(dbi4core, context.getClassId(), context.getUserId());
+    context.setSettingsModel(model);
+  }
+
   private void initializeSubject() {
-    String subject = SubjectInferer.build(dbi4core).inferSubjectForCourse(context.getCourseId());
+    String subject = SubjectInferer.build(dbi4core).inferSubjectForClass(context.getClassId());
     context.setSubject(subject);
   }
 

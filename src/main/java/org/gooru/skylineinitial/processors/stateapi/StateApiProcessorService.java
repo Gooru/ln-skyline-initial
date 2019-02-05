@@ -155,9 +155,12 @@ class StateApiProcessorService {
   }
 
   private StateApiResponse handleOfflineClass() {
-    if (classAndStudentStateVerifierService.isStudentILPDone()) {
-      LOGGER.debug("Student ILP done, will show course map");
+    if (classAndStudentStateVerifierService.isStudentBaselineDone()) {
+      LOGGER.debug("Student baseline done, will show course map");
       return StateApiResponseBuilder.buildForShowCourseMap();
+    } else if (classAndStudentStateVerifierService.isStudentILPDone()) {
+      LOGGER.debug("Student ILP done, will show directions");
+      return StateApiResponseBuilder.buildForShowDirections();
     } else {
       LOGGER
           .warn("Teacher need to trigger ILP for student: '{}' in class: '{}'", command.getUserId(),

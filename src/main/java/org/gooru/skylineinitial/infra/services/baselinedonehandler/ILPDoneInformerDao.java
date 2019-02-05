@@ -7,9 +7,10 @@ import org.skife.jdbi.v2.sqlobject.SqlUpdate;
  * @author ashish.
  */
 
-interface BaselineDoneInformerDao {
+interface ILPDoneInformerDao {
 
-  @SqlUpdate("update class_member set profile_baseline_done = true where class_id = :classId::uuid and user_id = :userId::uuid")
+  @SqlUpdate("update class_member set initial_lp_done = true, diag_asmt_state = :state where "
+      + " class_id = :classId::uuid and user_id = :userId::uuid")
   void updateDoneStatusForClassMember(@Bind("classId") String classId,
-      @Bind("userId") String userId);
+      @Bind("userId") String userId, @Bind("state") Integer state);
 }
