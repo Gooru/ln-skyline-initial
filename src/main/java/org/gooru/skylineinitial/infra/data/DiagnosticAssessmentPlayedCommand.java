@@ -14,7 +14,7 @@ import java.util.UUID;
  * @author ashish.
  */
 
-class DiagnosticAssessmentPlayedCommand {
+public class DiagnosticAssessmentPlayedCommand {
 
   private final UUID assessmentId;
   private final UUID sessionId;

@@ -1,8 +1,11 @@
 package org.gooru.skylineinitial.infra.services;
 
+import java.util.Set;
 import org.gooru.skylineinitial.infra.data.ProcessingContext;
 import org.gooru.skylineinitial.infra.data.SkylineInitialQueueModel;
+import org.gooru.skylineinitial.infra.services.algebra.competency.CompetencyLine;
 import org.gooru.skylineinitial.infra.services.baselinedonehandler.ILPDoneInformer;
+import org.gooru.skylineinitial.infra.services.ilpcalculator.IlpCalculatorService;
 import org.gooru.skylineinitial.infra.services.queueoperators.ProcessingEligibilityVerifier;
 import org.gooru.skylineinitial.infra.services.queueoperators.RequestDequeuer;
 import org.gooru.skylineinitial.infra.services.settings.SettingsModel;
@@ -91,8 +94,27 @@ class QueueRecordProcessingServiceImpl implements QueueRecordProcessingService {
   }
 
   private void process() {
-    // TODO: Implement this
+    // NOTE: There is a possibility that diagnostic info bit is provided for offline class and vice versa
+    // despite doing upstream checks. However, here, do not do a check. If diagnostic data is provided,
+    // process it else process based on competency_bound average line
+    CompetencyLine completedCompetencies;
+    if (context.getDiagnosticAssessmentPlayedCommand() != null) {
+      completedCompetencies = IlpCalculatorService
+          .buildForDiagnosticPlayed(dbi4core, dbi4ds, context).calculateCompetenciesCompleted();
+    } else {
+      completedCompetencies = IlpCalculatorService
+          .buildForHeuristicBound(dbi4core, dbi4ds, context).calculateCompetenciesCompleted();
+    }
+    if (completedCompetencies != null && !completedCompetencies.isEmpty()) {
+      // TODO: Implement this
+
+      // Persist competencies
+    } else {
+      LOGGER.warn("Tried doing ILP for user: '{}' in class: '{}', result is null",
+          context.getUserId(), context.getClassId());
+    }
   }
+
 
   private void preprocess() {
     validate();

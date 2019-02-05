@@ -24,6 +24,7 @@ public class SkylineInitialQueueModel {
   private int category;
   private int status;
   private JsonObject payload;
+  private DiagnosticAssessmentPlayedCommand command;
 
   public static SkylineInitialQueueModel createNonPersistedEmptyModel() {
     return new SkylineInitialQueueModel();
@@ -101,8 +102,11 @@ public class SkylineInitialQueueModel {
   }
 
   public DiagnosticAssessmentPlayedCommand payloadAsDiagnosticAssessmentPlayedCommand() {
-    if (payload != null) {
-      return DiagnosticAssessmentPlayedCommand.build(payload);
+    if (command != null) {
+      return command;
+    } else if (payload != null) {
+      command = DiagnosticAssessmentPlayedCommand.build(payload);
+      return command;
     }
     return null;
   }

@@ -39,3 +39,7 @@ alter table class_member add column initial_lp_done boolean;
 
 COMMENT on COLUMN class_member.diag_asmt_state IS '0 means not initialized, 1 means not needed, 2 means suggested, 3 means done, 4 means not available, 5 means class is offline';
 ALTER TABLE class_member ADD CONSTRAINT cm_das_chk CHECK (diag_asmt_state = 0 OR diag_asmt_state = 1 OR diag_asmt_state = 2 OR diag_asmt_state = 3 OR diag_asmt_state = 4 OR diag_asmt_state = 5);
+
+alter table grade_competency_bound add column average_tx_comp_code text;
+alter table grade_competency_bound add constraint gcb_fk_dcm_sdca FOREIGN KEY (tx_subject_code, tx_domain_code, average_tx_comp_code)
+  REFERENCES domain_competency_matrix(tx_subject_code, tx_domain_code, tx_comp_code);
