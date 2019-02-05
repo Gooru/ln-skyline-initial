@@ -63,4 +63,10 @@ public interface CompetencyLine {
   static CompetencyLine build(CompetencyMap competencyMap, boolean ceiling) {
     return new CompetencyLineImpl(competencyMap, ceiling);
   }
+
+  static CompetencyLine build(CompetencyMap competencyMap, CompetencySelectorStrategy strategy) {
+    return new CompetencyLineImpl(competencyMap, strategy);
+  }
+
+
 }

@@ -13,13 +13,12 @@ public interface LearnerProfileProvider {
 
   CompetencyLine findLearnerProfileForUser(ProcessingContext context);
 
-  static LearnerProfileProvider build(DBI dbi4core, DBI dbi4ds) {
-    return new LearnerProfileProviderImpl(dbi4core, dbi4ds);
+  static LearnerProfileProvider build(DBI dbi4ds) {
+    return new LearnerProfileProviderImpl(dbi4ds);
   }
 
   static LearnerProfileProvider build() {
-    return new LearnerProfileProviderImpl(DBICreator.getDbiForDefaultDS(),
-        DBICreator.getDbiForDsdbDS());
+    return new LearnerProfileProviderImpl(DBICreator.getDbiForDsdbDS());
   }
 
 }

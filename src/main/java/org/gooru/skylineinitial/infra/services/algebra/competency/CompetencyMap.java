@@ -36,6 +36,14 @@ public interface CompetencyMap {
   CompetencyLine getCeilingLine();
 
   /**
+   * Calculate a CompetencyLine for a given competency map based on selection strategy Note that if
+   * no competency is selected in a specific domain, that domain is not part of CompetencyLine
+   *
+   * @return competency line which denotes the selected line
+   */
+  CompetencyLine getSelectedLine(CompetencySelectorStrategy strategy);
+
+  /**
    * Calculate an earthline for a given competency map
    *
    * @return competency line which denotes the earthline

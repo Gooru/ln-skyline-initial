@@ -61,6 +61,11 @@ class CompetencyMapImpl implements CompetencyMap {
   }
 
   @Override
+  public CompetencyLine getSelectedLine(CompetencySelectorStrategy strategy) {
+    return CompetencyLine.build(this, strategy);
+  }
+
+  @Override
   public CompetencyLine getFloorLine() {
     if (floorLine == null) {
       floorLine = CompetencyLine.build(this, false);

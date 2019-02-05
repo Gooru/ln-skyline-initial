@@ -25,7 +25,7 @@ public class DiagnosticAssessmentPlayedCommand {
   private List<String> gutCodes;
   private String subjectCode;
 
-  DiagnosticAssessmentPlayedCommand(UUID assessmentId, UUID sessionId, UUID userId,
+  private DiagnosticAssessmentPlayedCommand(UUID assessmentId, UUID sessionId, UUID userId,
       UUID classId, List<UUID> questions, Double score) {
     this.assessmentId = assessmentId;
     this.sessionId = sessionId;

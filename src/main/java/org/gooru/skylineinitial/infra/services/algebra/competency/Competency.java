@@ -2,6 +2,7 @@ package org.gooru.skylineinitial.infra.services.algebra.competency;
 
 
 import org.gooru.skylineinitial.infra.constants.Constants;
+import org.gooru.skylineinitial.infra.constants.Constants.Misc;
 
 /**
  * This is the model which encapsulates the Domain model of Competency (which is different from DB
@@ -64,6 +65,11 @@ public interface Competency {
   static Competency buildInitialCompetency(String subject, String domain) {
     return new CompetencyImpl(new SubjectCode(subject), new DomainCode(domain),
         new CompetencyCode(Constants.Misc.COMPETENCY_PLACEHOLDER), new ProgressionLevel(0));
+  }
+
+  static Competency buildInitialCompetency(Competency competency) {
+    return new CompetencyImpl(competency.getSubject(), competency.getDomain(),
+        new CompetencyCode(Misc.COMPETENCY_PLACEHOLDER), new ProgressionLevel(0));
   }
 
   static Competency buildInitialCompetency(SubjectCode subject, DomainCode domain) {

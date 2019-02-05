@@ -34,6 +34,22 @@ class CompetencyLineImpl implements CompetencyLine {
 
   }
 
+  CompetencyLineImpl(CompetencyMap competencyMap, CompetencySelectorStrategy strategy) {
+    Objects.requireNonNull(competencyMap);
+
+    domains = Collections.unmodifiableList(new ArrayList<>(competencyMap.getDomains()));
+    domainCodeCompetencyMap = new HashMap<>();
+
+    for (DomainCode domainCode : domains) {
+      List<Competency> competencies = competencyMap.getCompetenciesForDomain(domainCode);
+      Competency competency = strategy.selectCompetencyForDomain(domainCode, competencies);
+      if (competency != null) {
+        domainCodeCompetencyMap
+            .put(domainCode, competency);
+      }
+    }
+  }
+
   @Override
   public List<DomainCode> getDomains() {
     return Collections.unmodifiableList(domains);

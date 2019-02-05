@@ -1,11 +1,11 @@
 package org.gooru.skylineinitial.infra.services;
 
-import java.util.Set;
 import org.gooru.skylineinitial.infra.data.ProcessingContext;
 import org.gooru.skylineinitial.infra.data.SkylineInitialQueueModel;
 import org.gooru.skylineinitial.infra.services.algebra.competency.CompetencyLine;
 import org.gooru.skylineinitial.infra.services.baselinedonehandler.ILPDoneInformer;
 import org.gooru.skylineinitial.infra.services.ilpcalculator.IlpCalculatorService;
+import org.gooru.skylineinitial.infra.services.learnerprofile.LearnerProfilePersister;
 import org.gooru.skylineinitial.infra.services.queueoperators.ProcessingEligibilityVerifier;
 import org.gooru.skylineinitial.infra.services.queueoperators.RequestDequeuer;
 import org.gooru.skylineinitial.infra.services.settings.SettingsModel;
@@ -106,9 +106,8 @@ class QueueRecordProcessingServiceImpl implements QueueRecordProcessingService {
           .buildForHeuristicBound(dbi4core, dbi4ds, context).calculateCompetenciesCompleted();
     }
     if (completedCompetencies != null && !completedCompetencies.isEmpty()) {
-      // TODO: Implement this
-
-      // Persist competencies
+      LearnerProfilePersister.build(dbi4ds, context)
+          .persistLearnerProfile(completedCompetencies, context.getUserId());
     } else {
       LOGGER.warn("Tried doing ILP for user: '{}' in class: '{}', result is null",
           context.getUserId(), context.getClassId());

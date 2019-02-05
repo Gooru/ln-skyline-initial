@@ -29,11 +29,10 @@ class IlpCalculatorServiceForHeuristicBound implements IlpCalculatorService {
     CompetencyLine lowGradeLine = GradeBoundFinder.build(dbi4ds)
         .findAverageLineForGrade(context.getSettingsModel().getStudentGradeLowerBound());
     // fetch learner profile
-    CompetencyLine learnerProfileLine = LearnerProfileProvider.build(dbi4core, dbi4ds)
+    CompetencyLine learnerProfileLine = LearnerProfileProvider.build(dbi4ds)
         .findLearnerProfileForUser(context);
     // merge these two lines
-    CompetencyLine resultLine = learnerProfileLine.merge(lowGradeLine, true);
 
-    return resultLine;
+    return learnerProfileLine.merge(lowGradeLine, true);
   }
 }
