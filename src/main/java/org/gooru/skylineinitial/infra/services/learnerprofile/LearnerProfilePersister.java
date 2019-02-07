@@ -12,7 +12,11 @@ public interface LearnerProfilePersister {
 
   void persistLearnerProfile(CompetencyLine skyline);
 
-  static LearnerProfilePersister build(DBI dbi4ds, ProcessingContext context) {
-    return new LearnerProfilePersisterImpl(dbi4ds, context);
+  static LearnerProfilePersister buildForDiagnosticPlay(DBI dbi4ds, ProcessingContext context) {
+    return new LearnerProfilePersisterFromDiagnosticPlay(dbi4ds, context);
+  }
+
+  static LearnerProfilePersister buildForNonDiagnosticCase(DBI dbi4ds, ProcessingContext context) {
+    return new LearnerProfilePersisterForNonDiagnosticCase(dbi4ds, context);
   }
 }

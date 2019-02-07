@@ -10,14 +10,14 @@ import org.slf4j.LoggerFactory;
  * @author ashish.
  */
 
-class LearnerProfilePersisterImpl implements LearnerProfilePersister {
+class LearnerProfilePersisterForNonDiagnosticCase implements LearnerProfilePersister {
 
   private final DBI dbi4ds;
   private final ProcessingContext context;
   private LearnerProfilePersisterDao learnerProfilePersisterDao;
   private static final Logger LOGGER = LoggerFactory.getLogger(LearnerProfilePersister.class);
 
-  LearnerProfilePersisterImpl(DBI dbi4ds, ProcessingContext context) {
+  LearnerProfilePersisterForNonDiagnosticCase(DBI dbi4ds, ProcessingContext context) {
     this.dbi4ds = dbi4ds;
     this.context = context;
   }
@@ -27,16 +27,12 @@ class LearnerProfilePersisterImpl implements LearnerProfilePersister {
     try {
       LOGGER.debug("LPCS Update will be done");
       LearnerProfilePersisterModel model = LearnerProfilePersisterModelBuilder
-          .build(context, skyline);
+          .buildForNonDiagnostic(context, skyline);
 
       LOGGER.debug("Will try to update LPCS");
-      fetchDao().persistLearnerProfileCompetencyStatus(model);
+      fetchDao().persistLearnerProfileCompetencyStatus(model, model.getGutCodes());
       LOGGER.debug("Will try to update LPCS TS");
-      fetchDao().persistLearnerProfileCompetencyStatusTS(model);
-      LOGGER.debug("Will try to update LPCE");
-      fetchDao().persistLearnerProfileCompetencyEvidence(model);
-      LOGGER.debug("Will try to update LPCE TS");
-      fetchDao().persistLearnerProfileCompetencyEvidenceTS(model);
+      fetchDao().persistLearnerProfileCompetencyStatusTS(model, model.getGutCodes());
     } catch (Throwable throwable) {
       LOGGER.warn("Exception updating LP. Aborting", throwable);
     }

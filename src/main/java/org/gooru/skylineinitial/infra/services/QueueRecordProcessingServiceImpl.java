@@ -98,7 +98,8 @@ class QueueRecordProcessingServiceImpl implements QueueRecordProcessingService {
     // despite doing upstream checks. However, here, do not do a check. If diagnostic data is provided,
     // process it else process based on competency_bound average line
     CompetencyLine completedCompetencies;
-    if (context.getDiagnosticAssessmentPlayedCommand() != null) {
+    boolean isDiagnosticPlay = context.getDiagnosticAssessmentPlayedCommand() != null;
+    if (isDiagnosticPlay) {
       completedCompetencies = IlpCalculatorService
           .buildForDiagnosticPlayed(dbi4core, dbi4ds, context).calculateCompetenciesCompleted();
     } else {
@@ -106,8 +107,13 @@ class QueueRecordProcessingServiceImpl implements QueueRecordProcessingService {
           .buildForHeuristicBound(dbi4core, dbi4ds, context).calculateCompetenciesCompleted();
     }
     if (completedCompetencies != null && !completedCompetencies.isEmpty()) {
-      LearnerProfilePersister.build(dbi4ds, context)
-          .persistLearnerProfile(completedCompetencies);
+      if (isDiagnosticPlay) {
+        LearnerProfilePersister.buildForDiagnosticPlay(dbi4ds, context)
+            .persistLearnerProfile(completedCompetencies);
+      } else {
+        LearnerProfilePersister.buildForNonDiagnosticCase(dbi4ds, context)
+            .persistLearnerProfile(completedCompetencies);
+      }
     } else {
       LOGGER.warn("Tried doing ILP for user: '{}' in class: '{}', result is null",
           context.getUserId(), context.getClassId());
