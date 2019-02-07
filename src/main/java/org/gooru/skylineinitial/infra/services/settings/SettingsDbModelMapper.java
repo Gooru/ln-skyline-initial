@@ -19,19 +19,33 @@ public class SettingsDbModelMapper implements ResultSetMapper<SettingsDbModel> {
     model.setClassId(UuidUtils.convertStringToUuid(r.getString(CLASS_ID)));
     model.setCourseId(UuidUtils.convertStringToUuid(r.getString(COURSE_ID)));
     model.setStudentId(UuidUtils.convertStringToUuid(r.getString(STUDENT_ID)));
-    model.setGradeLowerBound(r.getLong(GRADE_LOWER_BOUND));
-    model.setGradeUpperBound(r.getLong(GRADE_UPPER_BOUND));
-    model.setGradeCurrent(r.getLong(GRADE_CURRENT));
+    model.setGradeLowerBound(getValidLongValue(r.getLong(GRADE_LOWER_BOUND)));
+    model.setGradeUpperBound(getValidLongValue(r.getLong(GRADE_UPPER_BOUND)));
+    model.setGradeCurrent(getValidLongValue(r.getLong(GRADE_CURRENT)));
     model.setOffline(r.getBoolean(IS_OFFLINE));
-    model.setPrimaryLanguage(r.getInt(PRIMARY_LANGUAGE));
-    model.setStudentGradeLowerBound(r.getLong(STUDENT_GRADE_LOWER_BOUND));
-    model.setStudentGradeUpperBound(r.getLong(STUDENT_GRADE_UPPER_BOUND));
+    model.setPrimaryLanguage(getValidIntValue(r.getInt(PRIMARY_LANGUAGE)));
+    model.setStudentGradeLowerBound(getValidLongValue(r.getLong(STUDENT_GRADE_LOWER_BOUND)));
+    model.setStudentGradeUpperBound(getValidLongValue(r.getLong(STUDENT_GRADE_UPPER_BOUND)));
     model.setProfileBaselineDone(r.getBoolean(PROFILE_BASELINE_DONE));
     model.setDiagnosticAssessmentAssigned(
         UuidUtils.convertStringToUuid(r.getString(DIAG_ASMT_ASSIGNED)));
     model.setInitialLPDone(r.getBoolean(INITIAL_LP_DONE));
     model.setDiagnosticAssessmentState(r.getInt(DIAG_ASMT_STATE));
     return model;
+  }
+
+  private static Integer getValidIntValue(int i) {
+    if (i == 0) {
+      return null;
+    }
+    return i;
+  }
+
+  private static Long getValidLongValue(long l) {
+    if (l == 0) {
+      return null;
+    }
+    return l;
   }
 
   private static final String CLASS_ID = "class_id";
