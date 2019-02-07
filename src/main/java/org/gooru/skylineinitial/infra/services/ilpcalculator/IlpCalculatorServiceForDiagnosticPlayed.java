@@ -22,7 +22,7 @@ class IlpCalculatorServiceForDiagnosticPlayed implements IlpCalculatorService {
   private final DBI dbi4ds;
   private final ProcessingContext context;
   private DiagnosticDao diagnosticDao;
-  private CompetenyDao competenyDao;
+  private CompetencyDao competencyDao;
   private List<String> gutCodesAttempted;
   private List<String> gutCodesCompleted;
 
@@ -90,10 +90,10 @@ class IlpCalculatorServiceForDiagnosticPlayed implements IlpCalculatorService {
     return diagnosticDao;
   }
 
-  private CompetenyDao fetchCompetencyDao() {
-    if (competenyDao == null) {
-      competenyDao = dbi4ds.onDemand(CompetenyDao.class);
+  private CompetencyDao fetchCompetencyDao() {
+    if (competencyDao == null) {
+      competencyDao = dbi4ds.onDemand(CompetencyDao.class);
     }
-    return competenyDao;
+    return competencyDao;
   }
 }

@@ -12,7 +12,7 @@ import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
  * @author ashish.
  */
 
-interface CompetenyDao {
+interface CompetencyDao {
 
   @Mapper(CompetencyMapper.class)
   @SqlQuery(
