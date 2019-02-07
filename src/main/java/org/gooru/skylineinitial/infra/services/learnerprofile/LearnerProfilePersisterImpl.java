@@ -1,9 +1,10 @@
 package org.gooru.skylineinitial.infra.services.learnerprofile;
 
-import java.util.UUID;
 import org.gooru.skylineinitial.infra.data.ProcessingContext;
 import org.gooru.skylineinitial.infra.services.algebra.competency.CompetencyLine;
 import org.skife.jdbi.v2.DBI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author ashish.
@@ -13,6 +14,8 @@ class LearnerProfilePersisterImpl implements LearnerProfilePersister {
 
   private final DBI dbi4ds;
   private final ProcessingContext context;
+  private LearnerProfilePersisterDao learnerProfilePersisterDao;
+  private static final Logger LOGGER = LoggerFactory.getLogger(LearnerProfilePersister.class);
 
   LearnerProfilePersisterImpl(DBI dbi4ds, ProcessingContext context) {
     this.dbi4ds = dbi4ds;
@@ -20,7 +23,30 @@ class LearnerProfilePersisterImpl implements LearnerProfilePersister {
   }
 
   @Override
-  public void persistLearnerProfile(CompetencyLine skyline, UUID userId) {
-    // TODO: Implement this
+  public void persistLearnerProfile(CompetencyLine skyline) {
+    try {
+      LOGGER.debug("LPCS Update will be done");
+      LearnerProfilePersisterModel model = LearnerProfilePersisterModelBuilder
+          .build(context, skyline);
+
+      LOGGER.debug("Will try to update LPCS");
+      fetchDao().persistLearnerProfileCompetencyStatus(model);
+      LOGGER.debug("Will try to update LPCS TS");
+      fetchDao().persistLearnerProfileCompetencyStatusTS(model);
+      LOGGER.debug("Will try to update LPCE");
+      fetchDao().persistLearnerProfileCompetencyEvidence(model);
+      LOGGER.debug("Will try to update LPCE TS");
+      fetchDao().persistLearnerProfileCompetencyEvidenceTS(model);
+    } catch (Throwable throwable) {
+      LOGGER.warn("Exception updating LP. Aborting", throwable);
+    }
   }
+
+  private LearnerProfilePersisterDao fetchDao() {
+    if (learnerProfilePersisterDao == null) {
+      learnerProfilePersisterDao = dbi4ds.onDemand(LearnerProfilePersisterDao.class);
+    }
+    return learnerProfilePersisterDao;
+  }
+
 }

@@ -107,7 +107,7 @@ class QueueRecordProcessingServiceImpl implements QueueRecordProcessingService {
     }
     if (completedCompetencies != null && !completedCompetencies.isEmpty()) {
       LearnerProfilePersister.build(dbi4ds, context)
-          .persistLearnerProfile(completedCompetencies, context.getUserId());
+          .persistLearnerProfile(completedCompetencies);
     } else {
       LOGGER.warn("Tried doing ILP for user: '{}' in class: '{}', result is null",
           context.getUserId(), context.getClassId());
