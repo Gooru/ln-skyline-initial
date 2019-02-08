@@ -34,7 +34,7 @@ final class LearnerProfilePersisterModelBuilder {
     model.setCollectionScore(command.getScore());
     model.setLatestSessionId(UuidUtils.uuidToString(command.getSessionId()));
     model.setStatus(STATUS_COMPLETED);
-    model.setSubjectCode(command.getSubjectCode());
+    model.setSubjectCode(context.getSubject());
     model.setUserId(UuidUtils.uuidToString(command.getUserId()));
     model.setGutCodes(getCompetenciesFromCompetencyLine(completedCompetencies));
     model.setProfileSource(command.getProfileSource());
@@ -43,7 +43,6 @@ final class LearnerProfilePersisterModelBuilder {
 
   static LearnerProfilePersisterModel buildForNonDiagnostic(ProcessingContext context,
       CompetencyLine completedCompetencies) {
-    DiagnosticAssessmentPlayedCommand command = context.getDiagnosticAssessmentPlayedCommand();
 
     LearnerProfilePersisterModel model = new LearnerProfilePersisterModel();
 

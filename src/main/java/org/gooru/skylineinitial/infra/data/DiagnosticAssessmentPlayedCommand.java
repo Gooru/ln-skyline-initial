@@ -22,8 +22,6 @@ public class DiagnosticAssessmentPlayedCommand {
   private final UUID classId;
   private final Double score;
   private final List<UUID> questions;
-  private List<String> gutCodes;
-  private String subjectCode;
 
   private DiagnosticAssessmentPlayedCommand(UUID assessmentId, UUID sessionId, UUID userId,
       UUID classId, List<UUID> questions, Double score) {
@@ -96,29 +94,12 @@ public class DiagnosticAssessmentPlayedCommand {
     return questions;
   }
 
-  public List<String> getGutCodes() {
-    return gutCodes;
-  }
-
-  public void setGutCodes(List<String> gutCodes) {
-    this.gutCodes = gutCodes;
-  }
-
-  public String getSubjectCode() {
-    return subjectCode;
-  }
-
-  public void setSubjectCode(String subjectCode) {
-    this.subjectCode = subjectCode;
-  }
-
   public Double getScore() {
     return score;
   }
 
   @Override
   public String toString() {
-    String gutCodesString = gutCodes != null ? Arrays.toString(gutCodes.toArray()) : "";
     return "DiagnosticAssessmentPlayedCommand{" +
         "assessmentId=" + assessmentId +
         ", sessionId=" + sessionId +
@@ -126,8 +107,6 @@ public class DiagnosticAssessmentPlayedCommand {
         ", classId=" + classId +
         ", score=" + score +
         ", questions=" + questions +
-        ", gutCodes=" + gutCodesString +
-        ", subjectCode='" + subjectCode + '\'' +
         '}';
   }
 

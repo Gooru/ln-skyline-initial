@@ -39,7 +39,7 @@ interface LearnerProfilePersisterDao {
 
   @SqlBatch(
       "INSERT INTO learner_profile_competency_evidence_ts(user_id, gut_code, class_id, course_id, unit_id, lesson_id, latest_session_id,"
-          + " collection_id, collection_path_id, collection_score, collection_type, contentSource, status, created_at, updated_at) "
+          + " collection_id, collection_path_id, collection_score, collection_type, content_source, status, created_at, updated_at) "
           + " VALUES (:userId, :competencies, :classId, null, null, null, :latestSessionId, :collectionId, null, :collectionScore, "
           + " 'assessment', 'diagnostic', :status, now(), now()) ON CONFLICT (user_id, gut_code, collection_id, status) "
           + " DO UPDATE SET latest_session_id = :latestSessionId, collection_path_id = null, collection_score = :collectionScore, "
