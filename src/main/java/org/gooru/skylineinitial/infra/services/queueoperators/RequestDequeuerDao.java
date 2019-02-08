@@ -9,7 +9,7 @@ import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 
 interface RequestDequeuerDao {
 
-  @SqlUpdate("delete from profile_baseline_queue where id = :modelId")
+  @SqlUpdate("delete from skyline_initial_queue where id = :modelId")
   void dequeueRecord(@Bind("modelId") Long id);
 
 }
