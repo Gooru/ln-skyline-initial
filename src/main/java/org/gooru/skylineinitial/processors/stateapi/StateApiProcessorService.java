@@ -78,9 +78,10 @@ class StateApiProcessorService {
       return StateApiResponse.StateApiResponseBuilder.buildForShowCourseMap();
     }
 
-    if (!classAndStudentStateVerifierService.isClassSetupCompleted()
-        || !classAndStudentStateVerifierService.isStudentSetupDone()) {
-      LOGGER.debug("Class/student setup is not completed yet");
+    if (!classAndStudentStateVerifierService.isClassSetupDone()
+        || !classAndStudentStateVerifierService.isStudentSetupDone()
+        || !classAndStudentStateVerifierService.isCourseSetupDone()) {
+      LOGGER.debug("Class/student/course setup is not completed yet");
       return StateApiResponseBuilder.buildForClassSetupIncomplete();
     }
 
