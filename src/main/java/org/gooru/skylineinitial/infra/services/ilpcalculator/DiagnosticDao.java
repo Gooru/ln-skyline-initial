@@ -14,8 +14,9 @@ import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 interface DiagnosticDao {
 
   @Mapper(QuestionIdGutCodeTupleMapper.class)
-  @SqlQuery("select question_id, gut_code from diagnostic_assessment_questions where diagnostic_assessment_id = :assessmentId")
+  @SqlQuery("select question_id, gut_code from diagnostic_assessment_questions where "
+      + " diagnostic_assessment_id = :assessmentId and grade_id = :gradeId")
   List<QuestionIdGutCodeTuple> selectQuestionIdGutCodeTuplesForSpecifiedDiagnostic(
-      @Bind("assessmentId") UUID assessmentId);
+      @Bind("assessmentId") UUID assessmentId, @Bind("gradeId") Long gradeId);
 
 }
