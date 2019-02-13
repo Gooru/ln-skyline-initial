@@ -38,7 +38,8 @@ class IlpCalculatorServiceForDiagnosticPlayed implements IlpCalculatorService {
     // Get competencies list for questions
     List<QuestionIdGutCodeTuple> questionIdGutCodeTuples = fetchDiagnosticDao()
         .selectQuestionIdGutCodeTuplesForSpecifiedDiagnostic(
-            context.getDiagnosticAssessmentPlayedCommand().getAssessmentId());
+            context.getDiagnosticAssessmentPlayedCommand().getAssessmentId(),
+            context.getSettingsModel().getStudentGradeLowerBound());
 
     initializeDiagnosticResult(questionIdGutCodeTuples);
 
