@@ -1,6 +1,5 @@
 package org.gooru.skylineinitial.infra.data;
 
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -10,12 +9,17 @@ import java.util.UUID;
 public final class LearnerProfileSourceGenerator {
 
   private static final String DIAGNOSTIC = "diagnostic";
+  private static final String OFFLINE_CLASS_TRIGGER = "OfflineClassTrigger";
 
   private LearnerProfileSourceGenerator() {
     throw new AssertionError();
   }
 
   public static String generateProfileSource(UUID assessmentId) {
-    return DIAGNOSTIC + ":" + Objects.toString(assessmentId);
+    return DIAGNOSTIC + ":" + assessmentId;
+  }
+
+  public static String generateProfileSourceForOfflineClass(UUID classId) {
+    return OFFLINE_CLASS_TRIGGER + ":" + classId;
   }
 }

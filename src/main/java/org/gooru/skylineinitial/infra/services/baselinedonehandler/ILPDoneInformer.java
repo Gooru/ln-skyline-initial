@@ -4,16 +4,16 @@ import org.gooru.skylineinitial.infra.data.ProcessingContext;
 import org.gooru.skylineinitial.infra.jdbi.DBICreator;
 import org.skife.jdbi.v2.DBI;
 
-public interface BaselineDoneInformer {
+public interface ILPDoneInformer {
 
   void inform(ProcessingContext context);
 
-  static BaselineDoneInformer build(DBI dbi4core) {
-    return new BaselineDoneInformerImpl(dbi4core);
+  static ILPDoneInformer build(DBI dbi4core) {
+    return new ILPDoneInformerImpl(dbi4core);
   }
 
-  static BaselineDoneInformer build() {
-    return new BaselineDoneInformerImpl(DBICreator.getDbiForDefaultDS());
+  static ILPDoneInformer build() {
+    return new ILPDoneInformerImpl(DBICreator.getDbiForDefaultDS());
   }
 
 }

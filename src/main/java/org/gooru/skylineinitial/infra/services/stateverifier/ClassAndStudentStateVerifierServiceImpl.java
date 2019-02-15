@@ -20,8 +20,13 @@ class ClassAndStudentStateVerifierServiceImpl implements ClassAndStudentStateVer
   }
 
   @Override
-  public boolean isClassSetupCompleted() {
+  public boolean isClassSetupDone() {
     return model.getClassGradeCurrent() != null;
+  }
+
+  @Override
+  public boolean isCourseSetupDone() {
+    return model.getCourseId() != null;
   }
 
   @Override

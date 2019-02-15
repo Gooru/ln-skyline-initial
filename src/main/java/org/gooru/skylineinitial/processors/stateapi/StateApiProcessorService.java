@@ -78,9 +78,10 @@ class StateApiProcessorService {
       return StateApiResponse.StateApiResponseBuilder.buildForShowCourseMap();
     }
 
-    if (!classAndStudentStateVerifierService.isClassSetupCompleted()
-        || !classAndStudentStateVerifierService.isStudentSetupDone()) {
-      LOGGER.debug("Class/student setup is not completed yet");
+    if (!classAndStudentStateVerifierService.isClassSetupDone()
+        || !classAndStudentStateVerifierService.isStudentSetupDone()
+        || !classAndStudentStateVerifierService.isCourseSetupDone()) {
+      LOGGER.debug("Class/student/course setup is not completed yet");
       return StateApiResponseBuilder.buildForClassSetupIncomplete();
     }
 
@@ -155,9 +156,12 @@ class StateApiProcessorService {
   }
 
   private StateApiResponse handleOfflineClass() {
-    if (classAndStudentStateVerifierService.isStudentILPDone()) {
-      LOGGER.debug("Student ILP done, will show course map");
+    if (classAndStudentStateVerifierService.isStudentBaselineDone()) {
+      LOGGER.debug("Student baseline done, will show course map");
       return StateApiResponseBuilder.buildForShowCourseMap();
+    } else if (classAndStudentStateVerifierService.isStudentILPDone()) {
+      LOGGER.debug("Student ILP done, will show directions");
+      return StateApiResponseBuilder.buildForShowDirections();
     } else {
       LOGGER
           .warn("Teacher need to trigger ILP for student: '{}' in class: '{}'", command.getUserId(),

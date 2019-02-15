@@ -14,12 +14,10 @@ import org.skife.jdbi.v2.DBI;
 
 class LearnerProfileProviderImpl implements LearnerProfileProvider {
 
-  private final DBI dbi4core;
   private final DBI dbi4ds;
   private LearnerProfileProviderDao dsDao;
 
-  LearnerProfileProviderImpl(DBI dbi4core, DBI dbi4ds) {
-    this.dbi4core = dbi4core;
+  LearnerProfileProviderImpl(DBI dbi4ds) {
     this.dbi4ds = dbi4ds;
   }
 

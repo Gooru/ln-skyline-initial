@@ -39,3 +39,17 @@ alter table class_member add column initial_lp_done boolean;
 
 COMMENT on COLUMN class_member.diag_asmt_state IS '0 means not initialized, 1 means not needed, 2 means suggested, 3 means done, 4 means not available, 5 means class is offline';
 ALTER TABLE class_member ADD CONSTRAINT cm_das_chk CHECK (diag_asmt_state = 0 OR diag_asmt_state = 1 OR diag_asmt_state = 2 OR diag_asmt_state = 3 OR diag_asmt_state = 4 OR diag_asmt_state = 5);
+
+alter table grade_competency_bound add column average_tx_comp_code text;
+alter table grade_competency_bound add constraint gcb_fk_dcm_sdca FOREIGN KEY (tx_subject_code, tx_domain_code, average_tx_comp_code)
+  REFERENCES domain_competency_matrix(tx_subject_code, tx_domain_code, tx_comp_code);
+
+-- Diagnostic Assessment schema changes
+alter table diagnostic_assessment_questions drop constraint diagnostic_assessment_questions_diagnostic_assessment_id_fkey;
+alter table diagnostic_assessment drop constraint da_a_unq;
+alter table diagnostic_assessment add constraint da_a_g_unq UNIQUE(grade_id, assessment_id);
+alter table diagnostic_assessment_questions add column grade_id bigint;
+update diagnostic_assessment_questions daq set grade_id = (select grade_id from diagnostic_assessment da where da.assessment_id = daq.diagnostic_assessment_id);
+alter table diagnostic_assessment_questions alter column grade_id set not null;
+alter table diagnostic_assessment_questions add constraint daq_g_a_fkey FOREIGN KEY (grade_id, diagnostic_assessment_id) references diagnostic_assessment(grade_id, assessment_id);
+

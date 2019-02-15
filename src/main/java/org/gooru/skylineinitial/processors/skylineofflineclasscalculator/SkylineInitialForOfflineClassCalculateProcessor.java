@@ -26,7 +26,7 @@ public class SkylineInitialForOfflineClassCalculateProcessor implements AsyncMes
   private static final Logger LOGGER = LoggerFactory
       .getLogger(SkylineInitialForOfflineClassCalculateProcessor.class);
   private EventBusMessage eventBusMessage;
-  private SkylineInitialForOfflineClassCalculateProcessorService service = new SkylineInitialForOfflineClassCalculateProcessorService(
+  private final SkylineInitialForOfflineClassCalculateProcessorService service = new SkylineInitialForOfflineClassCalculateProcessorService(
       DBICreator.getDbiForDefaultDS(), DBICreator.getDbiForDsdbDS()
   );
 

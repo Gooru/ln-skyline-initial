@@ -6,7 +6,9 @@ public interface ClassAndStudentStateVerifierService {
 
   boolean isClassNonNavigator();
 
-  boolean isClassSetupCompleted();
+  boolean isClassSetupDone();
+
+  boolean isCourseSetupDone();
 
   boolean isStudentSetupDone();
 

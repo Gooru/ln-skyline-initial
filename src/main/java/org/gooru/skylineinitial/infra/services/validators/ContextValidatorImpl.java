@@ -1,31 +1,11 @@
 package org.gooru.skylineinitial.infra.services.validators;
 
 import org.gooru.skylineinitial.infra.data.ProcessingContext;
-import org.gooru.skylineinitial.infra.services.subjectinferer.SubjectInferer;
 import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The validator works on basis of whether it is "In Class" or IL experience.
- *
- * In case of "In Class" experience, validator validates the following:
- * <ul>
- * <li>Class is not deleted</li>
- * <li>Specified course is not deleted and is attached to specified class</li>
- * <li>Specified user is member of specified class</li>
- * </ul>
- *
- * In case of IL, the validation is:
- * <ul>
- * <li>The specified course is not deleted in system</li>
- * </ul>
- *
- * In both cases, the common validations are:
- * <ul>
- * <li>The course is tagged to a subject bucket</li>
- * </ul>
- *
  * @author ashish.
  */
 
@@ -46,23 +26,6 @@ class ContextValidatorImpl implements ContextValidator {
   @Override
   public void validate(ProcessingContext context) {
     this.context = context;
-
-    if (context.isInClassExperience()) {
-      validateInClass();
-    } else {
-      validateForIL();
-    }
-  }
-
-  private void validateForIL() {
-    if (!getDao4Core().validateCourseExists(context.getCourseId())) {
-      LOGGER.warn("Course: '{}' does not exist", context.getCourseId());
-      throw new IllegalStateException("Course does not exist: " + context.getCourseId());
-    }
-    validateCommon();
-  }
-
-  private void validateInClass() {
     if (!getDao4Core().validateClassCourseUserCombo(context.getClassId(), context.getCourseId(),
         context.getUserId())) {
       LOGGER.warn("Course: '{}'; Class: '{}'; User: '{}' combination validation check failed",
@@ -70,22 +33,6 @@ class ContextValidatorImpl implements ContextValidator {
       throw new IllegalStateException(
           "Course/Class/Member combination validation failed. Course: " + context.getCourseId()
               + ", Class: " + context.getClassId() + ", User: " + context.getUserId());
-    }
-    validateCommon();
-  }
-
-  private void validateCommon() {
-    validatePresenceOfBaselinedLPForUser();
-  }
-
-  private void validatePresenceOfBaselinedLPForUser() {
-    String subjectBucket = SubjectInferer.build(dbi4core)
-        .inferSubjectForCourse(context.getCourseId());
-    if (subjectBucket == null || subjectBucket.trim().isEmpty()) {
-      LOGGER.warn("Subject bucket is not present or is empty for course: '{}'",
-          context.getCourseId());
-      throw new IllegalStateException("Subject bucket is not present or is empty for course: " +
-          context.getCourseId());
     }
   }
 

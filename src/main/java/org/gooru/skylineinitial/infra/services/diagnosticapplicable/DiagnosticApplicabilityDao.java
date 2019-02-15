@@ -7,7 +7,7 @@ import org.skife.jdbi.v2.sqlobject.SqlQuery;
  * @author ashish.
  */
 
-public interface DiagnosticApplicabilityDao {
+interface DiagnosticApplicabilityDao {
 
   @SqlQuery("select count(tx_domain_code) from grade_competency_bound where tx_subject_code = :subjectCode and grade_id = :gradeId")
   int fetchDomainsCountInGrade(@Bind("subjectCode") String subjectCode,

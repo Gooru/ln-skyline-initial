@@ -13,12 +13,11 @@ public interface ProcessingEligibilityVerifier {
   boolean isEligibleForProcessing(SkylineInitialQueueModel model);
 
   static ProcessingEligibilityVerifier build() {
-    return new ProcessingEligibilityVerifierImpl(DBICreator.getDbiForDefaultDS(),
-        DBICreator.getDbiForDsdbDS());
+    return new ProcessingEligibilityVerifierImpl(DBICreator.getDbiForDefaultDS());
   }
 
-  static ProcessingEligibilityVerifier build(DBI dbi4core, DBI dbi4ds) {
-    return new ProcessingEligibilityVerifierImpl(dbi4core, dbi4ds);
+  static ProcessingEligibilityVerifier build(DBI dbi4core) {
+    return new ProcessingEligibilityVerifierImpl(dbi4core);
   }
 
 }

@@ -40,28 +40,10 @@ public final class Constants {
     public static final String MSG_OP_AUTH = "auth";
     public static final String MSG_OP_SKYLINE_INITIAL_OFFLINE_CLASS_CALCULATE = "op.skylineinitial.offline.class.calculate";
     public static final String MSG_OP_SKYLINE_INITIAL_STATE = "op.skylineinitial.state";
-    public static final String MSG_OP_POSTPROCESS_RESCOPE_R0 = "op.rescope.r0";
     public static final String MSG_MESSAGE = "message";
     public static final String ACCESS_TOKEN_VALIDITY = "access_token_validity";
 
     private Message() {
-      throw new AssertionError();
-    }
-  }
-
-  public static final class Response {
-
-    private Response() {
-      throw new AssertionError();
-    }
-  }
-
-  public static final class Params {
-
-    public static final String PARAM_MEMBER_ID = "member_id";
-    public static final String PARAM_CLASS_ID = "class_id";
-
-    private Params() {
       throw new AssertionError();
     }
   }

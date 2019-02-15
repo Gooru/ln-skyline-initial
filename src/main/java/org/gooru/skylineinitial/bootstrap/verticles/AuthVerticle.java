@@ -50,7 +50,7 @@ public class AuthVerticle extends AbstractVerticle {
   }
 
   @Override
-  public void stop(Future<Void> stopFuture) throws Exception {
+  public void stop(Future<Void> stopFuture) {
     finalizeVerticle(stopFuture);
   }
 
