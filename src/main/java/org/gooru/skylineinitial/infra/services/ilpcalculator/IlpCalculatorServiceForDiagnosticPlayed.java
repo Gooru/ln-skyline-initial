@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 import org.gooru.skylineinitial.infra.data.ProcessingContext;
 import org.gooru.skylineinitial.infra.services.algebra.competency.Competency;
+import org.gooru.skylineinitial.infra.services.algebra.competency.CompetencyAlgebraDefaultBuilder;
 import org.gooru.skylineinitial.infra.services.algebra.competency.CompetencyLine;
 import org.gooru.skylineinitial.infra.services.algebra.competency.CompetencyMap;
 import org.gooru.skylineinitial.infra.services.algebra.competency.CompetencySelectorStrategy;
@@ -42,34 +43,45 @@ class IlpCalculatorServiceForDiagnosticPlayed implements IlpCalculatorService {
             context.getSettingsModel().getStudentGradeLowerBound());
 
     initializeDiagnosticResult(questionIdGutCodeTuples);
+    // If student has not passed any question/competency, no point in doing processing.
+    if (gutCodesCompleted != null && !gutCodesCompleted.isEmpty()) {
+      // Accumulate all competencies from Gut codes
+      List<Competency> competenciesAttempted = fetchCompetencyDao()
+          .transformGutCodesToCompetency(context.getSubject(),
+              CollectionUtils.convertToSqlArrayOfString(gutCodesAttempted));
 
-    // Accumulate all competencies from Gut codes
-    List<Competency> competenciesAttempted = fetchCompetencyDao()
-        .transformGutCodesToCompetency(context.getSubject(),
-            CollectionUtils.convertToSqlArrayOfString(gutCodesAttempted));
+      // Create competency map
+      CompetencyMap competencyMap = CompetencyMap.build(competenciesAttempted);
 
-    // Create competency map
-    CompetencyMap competencyMap = CompetencyMap.build(competenciesAttempted);
+      // Create Competency selector strategy
+      CompetencySelectorStrategy strategy = ContiguousCorrectMaximumCompetencySelectorStrategy
+          .build(gutCodesCompleted);
 
-    // Create Competency selector strategy
-    CompetencySelectorStrategy strategy = ContiguousCorrectMaximumCompetencySelectorStrategy
-        .build(gutCodesCompleted);
+      // Get algorithm specific line
+      CompetencyLine diagnosticResultLine = competencyMap.getSelectedLine(strategy);
 
-    // Get algorithm specific line
-    CompetencyLine diagnosticResultLine = competencyMap.getSelectedLine(strategy);
+      // Handle the cases where in student may have passed, but because of algorithmic calculation
+      // net result for diagostic will still be null. Optimization short circuit
+      if (diagnosticResultLine == null || diagnosticResultLine.isEmpty()) {
+        return CompetencyAlgebraDefaultBuilder.getEmptyCompetencyLine();
+      } else {
+        // Get LP specific line for specified user and subject
+        CompetencyLine learnerProfileLine = LearnerProfileProvider.build(dbi4ds)
+            .findLearnerProfileForUser(context);
 
-    // Get LP specific line for specified user and subject
-    CompetencyLine learnerProfileLine = LearnerProfileProvider.build(dbi4ds)
-        .findLearnerProfileForUser(context);
-
-    // Merge these two lines using "better one selected" algorithm
-    return learnerProfileLine.merge(diagnosticResultLine, true);
+        // Merge these two lines using "better one selected" algorithm
+        return learnerProfileLine.merge(diagnosticResultLine, true);
+      }
+    } else {
+      return CompetencyAlgebraDefaultBuilder.getEmptyCompetencyLine();
+    }
   }
 
   private void initializeDiagnosticResult(List<QuestionIdGutCodeTuple> questionIdGutCodeTuples) {
     if (questionIdGutCodeTuples == null || questionIdGutCodeTuples.isEmpty()) {
       throw new IllegalStateException("No questions found in diagnostic assessment: " + context
-          .getDiagnosticAssessmentPlayedCommand().getAssessmentId());
+          .getDiagnosticAssessmentPlayedCommand().getAssessmentId() + "Grade: " + context
+          .getSettingsModel().getStudentGradeLowerBound());
     }
     gutCodesAttempted = new ArrayList<>(questionIdGutCodeTuples.size());
     gutCodesCompleted = new ArrayList<>(questionIdGutCodeTuples.size());
