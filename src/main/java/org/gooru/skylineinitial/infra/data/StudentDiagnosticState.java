@@ -13,7 +13,7 @@ public enum StudentDiagnosticState {
   SUGGESTED(2),
   DONE(3),
   NOT_AVAILABLE(4),
-  OFFLINE_CLASS(5);
+  FORCE_CALCULATE(5);
 
   private final Integer value;
   private static final Map<Integer, StudentDiagnosticState> LOOKUP = new HashMap<>(values().length);

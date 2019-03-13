@@ -22,7 +22,7 @@ public class SettingsDbModelMapper implements ResultSetMapper<SettingsDbModel> {
     model.setGradeLowerBound(getValidLongValue(r.getLong(GRADE_LOWER_BOUND)));
     model.setGradeUpperBound(getValidLongValue(r.getLong(GRADE_UPPER_BOUND)));
     model.setGradeCurrent(getValidLongValue(r.getLong(GRADE_CURRENT)));
-    model.setOffline(r.getBoolean(IS_OFFLINE));
+    model.setForceCalculateILP(r.getBoolean(FORCE_CALCULATE_ILP));
     model.setPrimaryLanguage(getValidIntValue(r.getInt(PRIMARY_LANGUAGE)));
     model.setStudentGradeLowerBound(getValidLongValue(r.getLong(STUDENT_GRADE_LOWER_BOUND)));
     model.setStudentGradeUpperBound(getValidLongValue(r.getLong(STUDENT_GRADE_UPPER_BOUND)));
@@ -54,7 +54,7 @@ public class SettingsDbModelMapper implements ResultSetMapper<SettingsDbModel> {
   private static final String GRADE_LOWER_BOUND = "grade_lower_bound";
   private static final String GRADE_UPPER_BOUND = "grade_upper_bound";
   private static final String GRADE_CURRENT = "grade_current";
-  private static final String IS_OFFLINE = "is_offline";
+  private static final String FORCE_CALCULATE_ILP = "force_calculate_ilp";
   private static final String PRIMARY_LANGUAGE = "primary_language";
   private static final String STUDENT_GRADE_LOWER_BOUND = "student_grade_lower_bound";
   private static final String STUDENT_GRADE_UPPER_BOUND = "student_grade_upper_bound";

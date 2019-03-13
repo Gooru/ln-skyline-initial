@@ -81,9 +81,9 @@ public class ApiDispatcherVerticle extends AbstractVerticle {
       case Constants.Message.MSG_OP_SKYLINE_INITIAL_STATE:
         future = ProcessorBuilder.buildStateApiProcessor(vertx, message).process();
         break;
-      case Constants.Message.MSG_OP_SKYLINE_INITIAL_OFFLINE_CLASS_CALCULATE:
+      case Constants.Message.MSG_OP_SKYLINE_INITIAL_FORCE_CALCULATE:
         future = ProcessorBuilder
-            .buildSkylineInitialForOfflineClassCalculateProcessor(vertx, message).process();
+            .buildSkylineInitialForForceCalculateProcessor(vertx, message).process();
         break;
       default:
         LOGGER.warn("Invalid operation type");

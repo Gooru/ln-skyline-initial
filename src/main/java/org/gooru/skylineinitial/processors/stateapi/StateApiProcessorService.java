@@ -90,16 +90,16 @@ class StateApiProcessorService {
       return StateApiResponseBuilder.buildForShowCourseMap();
     }
 
-    if (model.isClassOffline()) {
-      LOGGER.debug("Will handle offline class flow");
-      return handleOfflineClass();
+    if (model.isClassSetupToForceCalculateILP()) {
+      LOGGER.debug("Will handle force calculate fo class flow");
+      return handleClassForceCalculate();
     } else {
       LOGGER.debug("Will handle online class flow");
-      return handleNonOfflineClass();
+      return handleNonForceCalculateClass();
     }
   }
 
-  private StateApiResponse handleNonOfflineClass() {
+  private StateApiResponse handleNonForceCalculateClass() {
     StudentDiagnosticState studentDiagnosticState = model.getStudentDiagnosticState();
     switch (studentDiagnosticState) {
       case SUGGESTED:
@@ -110,14 +110,21 @@ class StateApiProcessorService {
         return StateApiResponseBuilder.buildForShowDirections();
       case DONE:
       case NOT_AVAILABLE:
-        // Clubbed above two states into one
-        LOGGER.debug("Current diagnostic state is either done or not available. Will check of ILP");
+      case FORCE_CALCULATE:
+        LOGGER.debug("Current state is done/not available/force calculate. Will check of ILP");
         if (classAndStudentStateVerifierService.isStudentILPDone()) {
+          // FORCE_CALCULATE state should always end here
           LOGGER.debug("Student ILP is done, will show directions");
           return StateApiResponseBuilder.buildForShowDirections();
-        } else {
+        } else if (studentDiagnosticState != StudentDiagnosticState.FORCE_CALCULATE) {
           LOGGER.debug("Student ILP is not done, ask user to wait while it is being done");
           return StateApiResponseBuilder.buildForILPInProgress();
+        } else {
+          LOGGER.warn(
+              "State is set to force calculated, while ILP is not done yet. Class: '{}', user: '{}'",
+              command.getClassId(), command.getUserId());
+          throw new IllegalStateException(
+              "State is set to force calculated, while ILP is not done yet");
         }
       case NOT_INITIALIZED:
         LOGGER.debug("Current diagnostic state is uninitialized, will handle accordingly");
@@ -155,7 +162,7 @@ class StateApiProcessorService {
     }
   }
 
-  private StateApiResponse handleOfflineClass() {
+  private StateApiResponse handleClassForceCalculate() {
     if (classAndStudentStateVerifierService.isStudentBaselineDone()) {
       LOGGER.debug("Student baseline done, will show course map");
       return StateApiResponseBuilder.buildForShowCourseMap();

@@ -14,7 +14,7 @@ public class SettingsDbModel {
   private Long gradeLowerBound;
   private Long gradeUpperBound;
   private Long gradeCurrent;
-  private Boolean isOffline;
+  private Boolean forceCalculateILP;
   private Integer primaryLanguage;
   private Long studentGradeLowerBound;
   private Long studentGradeUpperBound;
@@ -63,12 +63,12 @@ public class SettingsDbModel {
     this.gradeCurrent = gradeCurrent;
   }
 
-  public Boolean getOffline() {
-    return isOffline;
+  public Boolean getForceCalculateILP() {
+    return forceCalculateILP;
   }
 
-  public void setOffline(Boolean offline) {
-    isOffline = offline;
+  public void setForceCalculateILP(Boolean forceCalculateILP) {
+    this.forceCalculateILP = forceCalculateILP;
   }
 
   public Integer getPrimaryLanguage() {

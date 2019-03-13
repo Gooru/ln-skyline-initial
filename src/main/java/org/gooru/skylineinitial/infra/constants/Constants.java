@@ -38,7 +38,7 @@ public final class Constants {
     public static final String MSG_KEY_SESSION = "session";
     public static final String MSG_SESSION_TOKEN = "session.token";
     public static final String MSG_OP_AUTH = "auth";
-    public static final String MSG_OP_SKYLINE_INITIAL_OFFLINE_CLASS_CALCULATE = "op.skylineinitial.offline.class.calculate";
+    public static final String MSG_OP_SKYLINE_INITIAL_FORCE_CALCULATE = "op.skylineinitial.force.calculate";
     public static final String MSG_OP_SKYLINE_INITIAL_STATE = "op.skylineinitial.state";
     public static final String MSG_MESSAGE = "message";
     public static final String ACCESS_TOKEN_VALIDITY = "access_token_validity";
@@ -55,7 +55,7 @@ public final class Constants {
     public static final String API_AUTH_ROUTE = "/api/skyline-initial/*";
     private static final String API_BASE_ROUTE = "/api/skyline-initial/:version/";
     public static final String API_SKYLINEINITIAL_STATE = API_BASE_ROUTE + "state";
-    public static final String API_SKYLINEINITIAL_OFFLINE_CLASS_CALCULATE =
+    public static final String API_SKYLINEINITIAL_FORCE_CALCULATE =
         API_BASE_ROUTE + "calculate";
 
     private Route() {

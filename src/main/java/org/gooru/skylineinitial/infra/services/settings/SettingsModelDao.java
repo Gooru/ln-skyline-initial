@@ -14,7 +14,7 @@ interface SettingsModelDao {
   @Mapper(SettingsDbModelMapper.class)
   @SqlQuery(
       "select c.id as class_id, c.course_id, c.grade_lower_bound, c.grade_upper_bound, c.grade_current, "
-          + " c.is_offline, c.primary_language, cm.grade_lower_bound as student_grade_lower_bound, "
+          + " c.force_calculate_ilp, c.primary_language, cm.grade_lower_bound as student_grade_lower_bound, "
           + " cm.grade_upper_bound as student_grade_upper_bound, cm.profile_baseline_done, cm.diag_asmt_assigned, "
           + " cm.initial_lp_done, cm.diag_asmt_state, cm.user_id as student_id "
           + " from class c inner join class_member cm on c.id = cm.class_id "

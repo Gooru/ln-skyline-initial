@@ -44,8 +44,8 @@ class SettingsModelImpl implements SettingsModel {
   }
 
   @Override
-  public boolean isClassOffline() {
-    return dbModel.getOffline();
+  public boolean isClassSetupToForceCalculateILP() {
+    return dbModel.getForceCalculateILP();
   }
 
   @Override
