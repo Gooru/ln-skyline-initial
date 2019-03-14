@@ -9,7 +9,7 @@ import java.util.UUID;
 public final class LearnerProfileSourceGenerator {
 
   private static final String DIAGNOSTIC = "diagnostic";
-  private static final String OFFLINE_CLASS_TRIGGER = "OfflineClassTrigger";
+  private static final String FORCE_CALCULATE_TRIGGER = "ForceCalculateTrigger";
 
   private LearnerProfileSourceGenerator() {
     throw new AssertionError();
@@ -19,7 +19,7 @@ public final class LearnerProfileSourceGenerator {
     return DIAGNOSTIC + ":" + assessmentId;
   }
 
-  public static String generateProfileSourceForOfflineClass(UUID classId) {
-    return OFFLINE_CLASS_TRIGGER + ":" + classId;
+  public static String generateProfileSourceForForceCalculate(UUID classId) {
+    return FORCE_CALCULATE_TRIGGER + ":" + classId;
   }
 }

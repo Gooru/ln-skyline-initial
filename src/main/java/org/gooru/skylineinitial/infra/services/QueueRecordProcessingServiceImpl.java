@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  * - The processing is done and ILP is updated, using ILP update flow as outlined below
  *   - Read the queue record
  *   - parse the payload and map it to relevant command
- *   - if class is NOT offline and premium, and diagnostic is played
+ *   - if class is NOT set to forceCalculate and premium, and diagnostic is played
  *     - based on the command define on competency to be updated
  *     - Find out relevant competency in each domain
  *       - Arrange competency covered by diagnostic in each domain ordered by sequence id
@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  *     - In LPCS, find if user has any competency in that domain already mastered or completed
  *     - Take better of user's LPCS evidenced competency and relevant competency from diagnostic
  *     - Update LPCS (and other table)
- *   - else if class is offline and premium
+ *   - else if class is set to forceCalculate and premium
  *     - Read student origin, average value
  *     - populate it as ILP using better algo with existing LP
  *   - dequeue record
@@ -94,7 +94,7 @@ class QueueRecordProcessingServiceImpl implements QueueRecordProcessingService {
   }
 
   private void process() {
-    // NOTE: There is a possibility that diagnostic info bit is provided for offline class and vice versa
+    // NOTE: There is a possibility that diagnostic info bit is provided for class setup for force calculate and vice versa
     // despite doing upstream checks. However, here, do not do a check. If diagnostic data is provided,
     // process it else process based on competency_bound average line
     CompetencyLine completedCompetencies;

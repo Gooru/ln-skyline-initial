@@ -23,7 +23,7 @@ class RequestQueueServiceImpl implements RequestQueueService {
   }
 
   @Override
-  public void enqueueForOfflineClassWithPremiunCourse(UUID classId, List<UUID> users) {
+  public void enqueueForClassUsingForceCalculateWithPremiunCourse(UUID classId, List<UUID> users) {
     queueDao = dbi.onDemand(RequestQueueDao.class);
     this.classId = classId;
     this.users = users;
@@ -40,7 +40,7 @@ class RequestQueueServiceImpl implements RequestQueueService {
   }
 
   private void queueInDb() {
-    queueDao.queueRequestsForOfflineClass(users, courseId, classId);
+    queueDao.queueRequestsForClassSetupForForceCalculate(users, courseId, classId);
   }
 
 }

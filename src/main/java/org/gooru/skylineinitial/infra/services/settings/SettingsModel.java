@@ -22,7 +22,7 @@ public interface SettingsModel {
 
   Long getClassGradeCurrent();
 
-  boolean isClassOffline();
+  boolean isClassSetupToForceCalculateILP();
 
   boolean isClassNonNavigator();
 
