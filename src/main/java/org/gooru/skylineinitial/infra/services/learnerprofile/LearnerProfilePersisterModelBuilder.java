@@ -55,7 +55,7 @@ final class LearnerProfilePersisterModelBuilder {
     model.setUserId(UuidUtils.uuidToString(context.getUserId()));
     model.setGutCodes(getCompetenciesFromCompetencyLine(completedCompetencies));
     model.setProfileSource(
-        LearnerProfileSourceGenerator.generateProfileSourceForOfflineClass(context.getClassId()));
+        LearnerProfileSourceGenerator.generateProfileSourceForForceCalculate(context.getClassId()));
     return model;
   }
 

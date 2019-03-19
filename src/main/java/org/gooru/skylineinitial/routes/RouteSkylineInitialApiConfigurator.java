@@ -29,8 +29,8 @@ public class RouteSkylineInitialApiConfigurator implements RouteConfigurator {
   public void configureRoutes(Vertx vertx, Router router, JsonObject config) {
     eb = vertx.eventBus();
     mbusTimeout = config.getLong(Constants.EventBus.MBUS_TIMEOUT, 30L) * 1_000;
-    router.post(Constants.Route.API_SKYLINEINITIAL_OFFLINE_CLASS_CALCULATE)
-        .handler(this::doSkylineInitialForOfflineClass);
+    router.post(Constants.Route.API_SKYLINEINITIAL_FORCE_CALCULATE)
+        .handler(this::doSkylineInitialForced);
     router.post(Route.API_SKYLINEINITIAL_STATE).handler(this::fetchState);
   }
 
@@ -42,10 +42,10 @@ public class RouteSkylineInitialApiConfigurator implements RouteConfigurator {
         options, reply -> RouteResponseUtility.responseHandler(routingContext, reply, LOGGER));
   }
 
-  private void doSkylineInitialForOfflineClass(RoutingContext routingContext) {
+  private void doSkylineInitialForced(RoutingContext routingContext) {
     DeliveryOptions options = DeliveryOptionsBuilder
         .buildWithoutApiVersion(routingContext, mbusTimeout,
-            Message.MSG_OP_SKYLINE_INITIAL_OFFLINE_CLASS_CALCULATE);
+            Message.MSG_OP_SKYLINE_INITIAL_FORCE_CALCULATE);
     eb.<JsonObject>send(Constants.EventBus.MBEP_API_DISPATCHER,
         RouteRequestUtility.getBodyForMessage(routingContext),
         options, reply -> RouteResponseUtility.responseHandler(routingContext, reply, LOGGER));

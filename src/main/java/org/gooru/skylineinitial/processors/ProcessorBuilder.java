@@ -4,7 +4,7 @@ import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
-import org.gooru.skylineinitial.processors.skylineofflineclasscalculator.SkylineInitialForOfflineClassCalculateProcessor;
+import org.gooru.skylineinitial.processors.skylineforcecalculator.SkylineInitialForForceCalculateProcessor;
 import org.gooru.skylineinitial.processors.stateapi.StateApiProcessor;
 import org.gooru.skylineinitial.responses.MessageResponse;
 
@@ -27,9 +27,9 @@ public final class ProcessorBuilder {
     return new StateApiProcessor(vertx, message);
   }
 
-  public static AsyncMessageProcessor buildSkylineInitialForOfflineClassCalculateProcessor(
+  public static AsyncMessageProcessor buildSkylineInitialForForceCalculateProcessor(
       Vertx vertx, Message<JsonObject> message) {
-    return new SkylineInitialForOfflineClassCalculateProcessor(vertx, message);
+    return new SkylineInitialForForceCalculateProcessor(vertx, message);
   }
 
 }

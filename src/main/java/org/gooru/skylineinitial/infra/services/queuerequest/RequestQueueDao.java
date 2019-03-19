@@ -24,7 +24,7 @@ interface RequestQueueDao {
   @SqlBatch(
       "insert into skyline_initial_queue(user_id, course_id, class_id, category, status) values (:members, :courseId,"
           + " :classId, 1, 0) ON CONFLICT DO NOTHING")
-  void queueRequestsForOfflineClass(@Bind("members") List<UUID> members,
+  void queueRequestsForClassSetupForForceCalculate(@Bind("members") List<UUID> members,
       @Bind("courseId") UUID courseId, @Bind("classId") UUID classId);
 
 }

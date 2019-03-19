@@ -10,7 +10,7 @@ The specifications are located [here](https://docs.google.com/document/d/1JuIowT
 
 - State API will be exposed, which will govern the state of initial skyline setup flow when student comes to access a class. This API needs to be authenticated
 - Batch processing infra would be provided to process the requests for calculating the skyline
-- API to do Initial LP for the user in offline classes
+- API to do Initial LP for the user in classes where teacher has setup it that way
 
 
 ### Build and Run
@@ -65,11 +65,11 @@ The context object will be null in cases other then diagnostic-play.
 
 
   
-#### Offline class ILP API
-- This API should be called in context of teacher only and for offline classes only
+#### Class ILP API
+- This API should be called in context of teacher only and for classes which teacher has setup to be non diagnostic aware
 - This API will take input as list of class members
 - Do validations
-  - The class should be valid and it should be offline
+  - The class should be valid and it should be set to non diagnostic state
   - Each class members should have their origin set and they should be active
   - A premium course should be associated with class 
 - If validation fails, no processing happens and 400 status is sent back to caller 
@@ -103,7 +103,7 @@ POST /api/skyline-initial/v1/calculate
     - suggested
     - done
     - not available
-    - class offline
+    - class set to non diagnostic mode
 - ILP done
 **Class enhancement**
 - setup completed (calculate at run time or store in DB??)
@@ -182,17 +182,17 @@ In student context, setup completion is defined by:
 
 #### Determination of whether diagnostic is needed or not
 - Diagnostic is needed when
-  - Class is using a navigator course and it is not offline
+  - Class is using a navigator course and it is not set to not use diagnostic
   - ILP does not exists for specified grade
 
-#### Offline class with Premium course
+#### Non diagnostic class with Premium course
 If ILP is not done already, and there is at least one domain where in user does not have a LP, 
 student origin will be used to populate ILP. Update logic will be governed by whichever is better
 between origin and existing ILP.
 
 If ILP is done, then no need to do anything. 
 
-NOTE: From FE perspective, there is more to do. In case where class is offline with premium
+NOTE: From FE perspective, there is more to do. In case where class is set to not use diagnostic with premium
 course, any time teacher changes student settings, then:
 - Call the API to save the settings
 - If the baseline is already done for this user, then need to trigger the baseline again

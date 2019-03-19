@@ -27,9 +27,9 @@ class ILPDoneInformerImpl implements ILPDoneInformer {
   }
 
   private void updateStatusForClassMembership() {
-    if (context.getSettingsModel().isClassOffline()) {
+    if (context.getSettingsModel().isClassSetupToForceCalculateILP()) {
       fetchDao().updateDoneStatusForClassMember(context.getClassId().toString(),
-          context.getUserId().toString(), StudentDiagnosticState.OFFLINE_CLASS.getValue());
+          context.getUserId().toString(), StudentDiagnosticState.FORCE_CALCULATE.getValue());
     } else {
       fetchDao().updateDoneStatusForClassMember(context.getClassId().toString(),
           context.getUserId().toString(), StudentDiagnosticState.DONE.getValue());

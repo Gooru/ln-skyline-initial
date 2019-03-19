@@ -1,4 +1,4 @@
-package org.gooru.skylineinitial.processors.skylineofflineclasscalculator;
+package org.gooru.skylineinitial.processors.skylineforcecalculator;
 
 import java.util.HashSet;
 import java.util.List;
@@ -15,32 +15,32 @@ import org.slf4j.LoggerFactory;
  * @author ashish.
  */
 
-class SkylineInitialForOfflineClassCalculateProcessorService {
+class SkylineInitialForClassWithForceCalculateProcessorService {
 
   private final DBI dbiForDefaultDS;
   private final DBI dbiForDsdbDS;
-  private SkylineInitialForOfflineClassCalculateCommand command;
+  private SkylineInitialForClassWithForceCalculateCommand command;
   private static final Logger LOGGER = LoggerFactory
-      .getLogger(SkylineInitialForOfflineClassCalculateProcessorService.class);
-  private SkylineInitialForOfflineClassCalculateDao skylineInitialForOfflineClassCalculateDao;
+      .getLogger(SkylineInitialForClassWithForceCalculateProcessorService.class);
+  private SkylineInitialForClassWithForceCalculateDao skylineInitialForClassWithForceCalculateDao;
   private List<UUID> members;
   private Set<String> usersSet;
 
-  SkylineInitialForOfflineClassCalculateProcessorService(DBI dbiForDefaultDS,
+  SkylineInitialForClassWithForceCalculateProcessorService(DBI dbiForDefaultDS,
       DBI dbiForDsdbDS) {
 
     this.dbiForDefaultDS = dbiForDefaultDS;
     this.dbiForDsdbDS = dbiForDsdbDS;
   }
 
-  void calculateInitialSkyline(SkylineInitialForOfflineClassCalculateCommand command) {
+  void calculateInitialSkyline(SkylineInitialForClassWithForceCalculateCommand command) {
     this.command = command;
     LOGGER.debug("Command is : {}", command.toString());
     validateClassAndMembersAndAuthorization();
     validateCourseAndIsPremium();
     initializeMembers();
     RequestQueueService.build(dbiForDefaultDS)
-        .enqueueForOfflineClassWithPremiunCourse(command.getClassId(), members);
+        .enqueueForClassUsingForceCalculateWithPremiunCourse(command.getClassId(), members);
   }
 
   private void initializeMembers() {
@@ -54,7 +54,8 @@ class SkylineInitialForOfflineClassCalculateProcessorService {
   }
 
   private void validateClassAndMembersAndAuthorization() {
-    // validate class (not archive/not deleted and is offline), memberships provided(active and with specified class), origin set and teacher/co teacher authorization
+    // validate class (not archive/not deleted and force_calculate_ilp), memberships provided(active and with specified class),
+    // origin set and teacher/co teacher authorization
     usersSet = new HashSet<>(command.getUsersList());
     int userCountInRequest = usersSet.size();
     int usersCountInDb = fetchDao().validatedCountForClassMembers(command.getClassId(),
@@ -64,11 +65,11 @@ class SkylineInitialForOfflineClassCalculateProcessorService {
     }
   }
 
-  private SkylineInitialForOfflineClassCalculateDao fetchDao() {
-    if (skylineInitialForOfflineClassCalculateDao == null) {
-      skylineInitialForOfflineClassCalculateDao = dbiForDefaultDS
-          .onDemand(SkylineInitialForOfflineClassCalculateDao.class);
+  private SkylineInitialForClassWithForceCalculateDao fetchDao() {
+    if (skylineInitialForClassWithForceCalculateDao == null) {
+      skylineInitialForClassWithForceCalculateDao = dbiForDefaultDS
+          .onDemand(SkylineInitialForClassWithForceCalculateDao.class);
     }
-    return skylineInitialForOfflineClassCalculateDao;
+    return skylineInitialForClassWithForceCalculateDao;
   }
 }

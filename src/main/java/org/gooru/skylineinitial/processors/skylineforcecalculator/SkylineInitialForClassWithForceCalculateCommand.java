@@ -1,4 +1,4 @@
-package org.gooru.skylineinitial.processors.skylineofflineclasscalculator;
+package org.gooru.skylineinitial.processors.skylineforcecalculator;
 
 import io.vertx.core.json.JsonArray;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import org.gooru.skylineinitial.infra.utils.UuidUtils;
  * @author ashish.
  */
 
-class SkylineInitialForOfflineClassCalculateCommand {
+class SkylineInitialForClassWithForceCalculateCommand {
 
   private final UUID classId;
   private final List<String> usersList;
@@ -24,7 +24,7 @@ class SkylineInitialForOfflineClassCalculateCommand {
 
   private final UUID teacherId;
 
-  private SkylineInitialForOfflineClassCalculateCommand(UUID classId, List<String> usersList,
+  private SkylineInitialForClassWithForceCalculateCommand(UUID classId, List<String> usersList,
       UUID teacherId) {
     this.classId = classId;
     this.usersList = Collections.unmodifiableList(usersList);
@@ -39,7 +39,7 @@ class SkylineInitialForOfflineClassCalculateCommand {
     return usersList;
   }
 
-  static SkylineInitialForOfflineClassCalculateCommand build(EventBusMessage eventBusMessage) {
+  static SkylineInitialForClassWithForceCalculateCommand build(EventBusMessage eventBusMessage) {
     JsonArray users = eventBusMessage.getRequestBody().getJsonArray(RequestAttributes.USERS);
     if (users == null || users.isEmpty()) {
       throw new IllegalArgumentException("Invalid users list");
@@ -52,7 +52,7 @@ class SkylineInitialForOfflineClassCalculateCommand {
     if (!UuidUtils.validateUuid(Objects.toString(eventBusMessage.getUserId()))) {
       throw new IllegalArgumentException("Invalid teacher id");
     }
-    return new SkylineInitialForOfflineClassCalculateCommand(UUID.fromString(classIdString),
+    return new SkylineInitialForClassWithForceCalculateCommand(UUID.fromString(classIdString),
         usersList, eventBusMessage.getUserId());
   }
 
@@ -71,7 +71,7 @@ class SkylineInitialForOfflineClassCalculateCommand {
 
   @Override
   public String toString() {
-    return "SkylineInitialForOfflineClassCalculateCommand{" +
+    return "SkylineInitialForClassWithForceCalculateCommand{" +
         "classId=" + classId + ", usersList=" + usersList + ", teacherId=" + teacherId + '}';
   }
 
