@@ -2,6 +2,7 @@ package org.gooru.skylineinitial.infra.services.learnerprofile;
 
 import org.gooru.skylineinitial.infra.data.ProcessingContext;
 import org.gooru.skylineinitial.infra.services.algebra.competency.CompetencyLine;
+import org.gooru.skylineinitial.infra.services.learnerprofile.postprocessing.StrugglingCompetencyRemoverProcessor;
 import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,12 @@ class LearnerProfilePersisterFromDiagnosticPlay implements LearnerProfilePersist
       fetchDao().persistLearnerProfileCompetencyEvidence(model, model.getGutCodes());
       LOGGER.debug("Will try to update LPCE TS");
       fetchDao().persistLearnerProfileCompetencyEvidenceTS(model, model.getGutCodes());
+        
+      // As per the requirement, we need to remove the competency from struggling which is getting
+      // completed via diagnostic assessment play. Here we will check the inferred competencies as
+      // well and remove accordingly
+      new StrugglingCompetencyRemoverProcessor(model).process();
+      
     } catch (Throwable throwable) {
       LOGGER.warn("Exception updating LP. Aborting", throwable);
     }

@@ -62,6 +62,19 @@ public final class Constants {
       throw new AssertionError();
     }
   }
+  
+  public static final class LPStatus {
+    public static final int NOT_STARTED = 0;
+    public static final int IN_PROGRESS = 1;
+    public static final int INFERRED = 2;
+    public static final int ASSERTED = 3;
+    public static final int COMPLETED = 4;
+    public static final int MASTERED = 5;
+
+    private LPStatus() {
+      throw new AssertionError();
+    }
+  }
 
   public static final class Misc {
 
