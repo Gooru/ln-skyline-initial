@@ -212,4 +212,134 @@ course, any time teacher changes student settings, then:
   - To remove processing of LPCS
   - Make it queue the request along with payload in queue table
 
+## Technical drilldown: Package structure and functions
+
+Following is the list of packages and its contents. Note that abbreviated package names are used.
+
+### o.g.s.bootstrap 
+Contains the main runner class which has the main method.
+
+### o.g.s.bootstrap.verticles
+Housing for the verticles. There are four verticles as of now
+
+### o.g.s.bootstrap.verticles.AuthVerticle
+Authenticates session token with Redis
+
+### o.g.s.bootstrap.verticles.HttpVerticle
+Responsible for starting up HTTP server and registering routes
+
+### o.g.s.bootstrap.verticles.ApiDispatcherVerticle
+The verticle which is main listener for API requests which is forwarded from Http server post authentication. 
+
+### o.g.s.bootstrap.verticles.SkylineInitialProcessingVerticle
+This verticles receives a message for the ID for the message in queue for skyline processing. It takes that record and does the processing. Other components (even outside the process scope) can queue the records to get it processed.
+
+### o.g.s.infra.components
+This contains various components like config handler, data source registry etc. This also has mechanism to initialize components at the startup. Components are generally singleton.
+
+### o.g.s.infra.components.SkylineInitialQueueReaderAndDispatcher
+This is the timer based runner class which is responsible to read the Persisted queued requests and send them to Event bus so that they can be processed by listeners. It does wait for reply, so that we do increase the backpressure on TCP bus too much, however what is replied is does not matter as we do schedule another one shot timer to do the similar stuff. For the first run, it re-initializes the status in the DB so that any tasks that were under processing when the application shut down happened would be picked up again.
+
+### o.g.s.infra.constants
+Housing for different constants used across the application.
+
+### o.g.s.infra.data
+This contains general POJO which are reusable across different modules in this application. 
+
+### o.g.s.infra.exceptions
+This contains exception classes which are reusable across different modules in this application. 
+
+### o.g.s.infra.jdbi
+This is JDBI specific package which contains helper entities like reusable mappers, argument factories, creators etc. This does not contain module specific DAO though. They are hosted with individual modules.
+
+### o.g.s.infra.services
+This houses infra structure services. These are different from domain services. 
+
+### o.g.s.infra.services.algebra.competency 
+This package houses the whole algebra aspects of competency. This includes, but not limited to:
+- Competency model
+- Domain model
+- Competency line 
+- Competency Path
+- Competency Route
+- Progression Level (sequence id of competency)
+- Subject model
+
+This is base package responsible for doing algebra and unless there is a need to change the way algebra functions, this should be pretty constant.
+
+### o.g.s.infra.services.algebra.competency.mappers
+Houses JDBI mappers for entities contributing to competency algebra
+
+ ### o.g.s.infra.services.baselinedonehandler
+ This modules houses machinery which does post processing once the baseline is done. This is one part of rest of post processing infra which can be extended
+ 
+### o.g.s.infra.services.classsetting
+The module to fetch the class level settings which are used in the context of skyline calculation.
+
+### o.g.s.infra.services.diagnosticapplicable
+ The module to determine whether the diagnostic is applicable or not in specified context.
+ 
+### o.g.s.infra.services.diagnosticfetcher
+The module to fetch the diagnostic assessment based on the context provided
+
+### o.g.s.infra.services.ilpcalculator
+The module to calculate the ILP in both the cases, either based on diagnostic or based on teacher provided input.
+ 
+### o.g.s.infra.services.learnerprofile
+ The module to deal with learner profile. This includes persistence of learner profile from both diagnostic and non diagnostic cases.
+ 
+### o.g.s.infra.services.learnerprofile.postprocessing
+Post processing infra that may house multiple actions to be done once the learner profile persistence is done.
+
+### o.g.s.infra.services.queueoperators
+This module houses operations on queue record like
+- checking eligibility of processing based on class settings
+- initializing the queue once the application starts
+- mechanism to dispatch the records to processing verticle
+- mechanism to queue and/or dequeue the request
+
+### o.g.s.infra.services.queuerequest
+This module is responsible for queueing the request
+
+### o.g.s.infra.services.settings
+Mechanism to fetch and store the settings from contextual entities like class etc
+
+### o.g.s.infra.services.stateupdater
+Mechanism to update the state like diag_asmt_state and diag_asmt_assigned
+
+### o.g.s.infra.services.stateverifier
+Verification of different states based on values in entity model.
+
+### o.g.s.infra.services.subjectinferer
+Module used to infer subject either from class/course based on context
+
+### o.g.s.infra.services.validators
+Module to validate different aspects of context for class/user
+
+### o.g.s.infra.utils
+Different utility classes
+
+### o.g.s.processors
+The processors which are used as handlers for APIs
+
+### o.g.s.processors.skylineforcecalculator
+API handler for skyline force calculator API
+
+### o.g.s.processors.stateapi
+API handlers for state API
+
+### o.g.s.responses.*
+Package to handler http response writing and passing it on
+
+### o.g.s.routes.*
+Utilities for the route registration for http handling and payload creation to be passes on to downstream processors.
+
+
+
+
+
+
+
+ 
+  
 
